@@ -16,21 +16,15 @@
   <div class="content-container">
     <div class="input-container">
       <ion-item>
-        <ion-input placeholder="Nombre de usuario" type="text" [(ngModel)]="user"></ion-input>
-      </ion-item>
+        <ion-input placeholder="Correo electronico" type="email" [(ngModel)]="user.email" required=></ion-input>
+      </ion-item> 
       <ion-item>
-        <ion-input placeholder="Correo electronico" type="text" [(ngModel)]="email"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input placeholder="Confirmar Contraseña" type="password" [(ngModel)]="password2"></ion-input>
+        <ion-input placeholder="Contraseña" type="password" [(ngModel)]="user.password" required=></ion-input>
       </ion-item>
     </div>
   
     <div class="button-container">
-      <ion-button expand="block" (click)="onRegistrarseButtonPressed()">Crear Cuenta</ion-button>
+      <ion-button expand="block" (click)="register(user)">Crear Cuenta</ion-button>
       
     </div>
   </div>

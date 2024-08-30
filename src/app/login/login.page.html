@@ -19,16 +19,16 @@
   <div class="content-container">
     <div class="input-container">
       <ion-item>
-        <ion-input placeholder="Usuario" type="text" [(ngModel)]="user"></ion-input>
+        <ion-input placeholder="Correo electronico" type="email" required [(ngModel)]="user.email"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password"></ion-input>
+        <ion-input placeholder="Contraseña" type="password" required [(ngModel)]="user.password"></ion-input>
       </ion-item>
     </div>
   
     <div class="button-container">
-      <ion-button expand="block" (click)="onLoginButtonPressed()">Login</ion-button>
-      <ion-button expand="block" (click)="onRegisterButtonPressed()">Register</ion-button>
+      <ion-button expand="block" (click)="onLoginButtonPressed(user)">Acceder</ion-button>
+      <ion-button expand="block" [routerLink]="['/register']">Register</ion-button>
     </div>
   </div>
 </ion-content>
