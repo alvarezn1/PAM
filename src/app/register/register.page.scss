@@ -1,0 +1,15 @@
+ion-content {
+    --ion-background-color:#efefef ;
+    --ion-color-primary:rgb(19, 123, 242);
+    --ion-text-color:black;
+    --ion-item-background:white;
+}
+
+ion-img {
+  width: 50%; /* Ajusta el porcentaje según lo necesario */
+  max-width: 200px; /* Ajusta el ancho máximo según sea necesario */
+  height: auto; /* Mantiene la proporción de la imagen */
+  object-fit: contain; /* Asegura que la imagen se ajuste dentro del contenedor */
+  display: block; /* Asegura que la imagen se comporte como un bloque */
+  margin: 0 auto; /* Centra la imagen si es necesario */
+}

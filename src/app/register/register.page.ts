@@ -37,7 +37,7 @@ export class RegisterPage implements OnInit {
         await this.afAuth.createUserWithEmailAndPassword(user.email,user.password).then(data =>{
           console.log(data);
 
-          this.navCtrl.navigateRoot("home")
+          this.navCtrl.navigateRoot("login")
         })
 
       }catch (error:any){

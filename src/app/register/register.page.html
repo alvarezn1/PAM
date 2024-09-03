@@ -3,25 +3,35 @@
      <ion-buttons  slot="start">
       <ion-back-button></ion-back-button>
      </ion-buttons>
-    <ion-title>Register</ion-title>
+    <ion-title>Registrate</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div class="splash-container">
+    <ion-img src="assets/icon/login.png"></ion-img>
+  </div>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Register</ion-title>
     </ion-toolbar>
+    <ion-buttons  slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-header>
-  <div class="content-container">
-    <div class="input-container">
+  <div class="form-container">
+    <ion-list>
       <ion-item>
-        <ion-input placeholder="Correo electronico" type="email" [(ngModel)]="user.email" required=></ion-input>
-      </ion-item> 
-      <ion-item>
-        <ion-input placeholder="Contraseña" type="password" [(ngModel)]="user.password" required=></ion-input>
+        <ion-input labelPlacement="floating" type="email" [(ngModel)]="user.email" required=>
+          <div slot="label">Correo electronico <ion-text color="danger"></ion-text></div>
+        </ion-input>
       </ion-item>
-    </div>
+      <ion-item>
+      <ion-input labelPlacement="floating" type="password" [(ngModel)]="user.password" required=>
+        <div slot="label">Contraseña <ion-text color="danger"></ion-text></div>
+      </ion-input>
+    </ion-item>
+    </ion-list>
   
     <div class="button-container">
       <ion-button expand="block" (click)="register(user)">Crear Cuenta</ion-button>
@@ -29,3 +39,7 @@
     </div>
   </div>
 </ion-content>
+
+
+
+

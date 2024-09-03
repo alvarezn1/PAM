@@ -1,12 +1,8 @@
 <ion-header [translucent]="true">
  
   <ion-toolbar>
-
-
     <ion-title>login</ion-title>
-
   </ion-toolbar>
-
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -30,8 +26,11 @@
     </div>
   
     <div class="button-container">
-      <ion-button expand="block" (click)="onLoginButtonPressed(user)">Acceder</ion-button>
+      <ion-button expand="block" (click)="login()">Acceder</ion-button>
       <ion-button expand="block" [routerLink]="['/register']">Register</ion-button>
+      
     </div>
   </div>
 </ion-content>
+
+

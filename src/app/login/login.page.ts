@@ -14,57 +14,19 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 export class LoginPage implements OnInit {
   user = {} as User;
 
-  constructor(
-    private router: Router,
-    private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController,
-    private afAuth: AngularFireAuth,
-    private navCtrl: NavController) { }
+  constructor(private sessionManager: SessionManager) {} 
 
     
 
   ngOnInit() {
   }
-  async onLoginButtonPressed(user: User){
-    if(this.formValidation()){
-      let loader = await this.loadingCtrl.create({message:"Espere por favor"})
-      await loader.present();
 
-      try{
-        await this.afAuth.signInWithEmailAndPassword(user.email,user.password).then(data =>{
-          console.log(data);
-
-          this.navCtrl.navigateRoot("home")
-        })
-
-      }catch (error:any){
-        error.message = "Usuario no registrado";
-        let errormessage = error.message || error.getLocalizedMessage();
-
-        this.showToast(errormessage)
-      }
-      await loader.dismiss();
-    }
+  async login(){
+    await this.sessionManager.performLogin(this.user)
   }
-  formValidation(){
-    if(!this.user.email){
-      this.showToast("Ingrese un email");
-      return false;
-    }
-    if(!this.user.password){
-      this.showToast("Ingrese una contraseña");
-      return false;
-  }
-  return true;
-
+ 
   
-  }
-  showToast(message: string){
-    this.toastCtrl.create({
-      message: message,
-      duration: 4000
-    }).then(toastData => toastData.present());
-  }
+ 
   }
 
 
