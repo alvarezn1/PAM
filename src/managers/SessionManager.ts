@@ -57,6 +57,18 @@ export class SessionManager {
         }
       }
 
+      logout(){
+        this.afAuth.signOut().then(()=>{
+          this.router.navigate(['login']);
+          this.showToast('Sesion cerrada con exito');
+        }).catch((error: any)=>{
+          let errormessage = error.message ||"Error al cerrar sesion";
+          this.showToast(errormessage)
+        })
+
+
+      }
+
     formValidation(user: User): boolean {
       if (!user.email) {
         this.showToast("Ingrese un email");

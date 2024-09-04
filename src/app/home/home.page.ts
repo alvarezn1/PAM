@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { SessionManager } from 'src/managers/SessionManager';
+import { User } from "../models/user.models";
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,16 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  user = {} as User;
+  
 
-  constructor() {}
+  constructor(private sessionManager: SessionManager) {}
+
+  async logout(){
+    await this.sessionManager.logout();
+    
+  }
+
+ 
 
 }
