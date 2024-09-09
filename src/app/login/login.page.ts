@@ -16,6 +16,10 @@ export class LoginPage implements OnInit {
 
   constructor(private sessionManager: SessionManager) {} 
 
+  
+
+
+
     
 
   ngOnInit() {

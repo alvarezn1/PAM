@@ -47,7 +47,7 @@ export class SessionManager {
     
           try {
             await this.afAuth.signInWithEmailAndPassword(user.email, user.password);
-            await this.router.navigate(['home']);
+            await this.router.navigate(['home'],{queryParams:{email: user.email}});
           } catch (error: any) {
             let errormessage = error.message || "Usuario no registrado";
             this.showToast(errormessage);

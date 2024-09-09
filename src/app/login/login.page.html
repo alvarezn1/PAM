@@ -7,7 +7,7 @@
 
 <ion-content [fullscreen]="true">
   <div class="splash-container">
-    <ion-img src="assets/icon/login.png"></ion-img>
+    <ion-img src="assets/icon/logoapp.png"></ion-img>
   </div>
   <ion-header collapse="condense">
     <ion-toolbar>
@@ -27,8 +27,8 @@
   
     <div class="button-container">
       <ion-button expand="block" (click)="login()">Acceder</ion-button>
-      <ion-button expand="block" [routerLink]="['/register']">Register</ion-button>
-      
+      <ion-label>¿No tienes cuenta?</ion-label>
+      <a [routerLink]="['/register']">Registrate aca!</a>
     </div>
   </div>
 </ion-content>
