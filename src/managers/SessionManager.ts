@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 
 export class SessionManager {
 
-    private readonly temporaryUserName: string = 'user';
+    private readonly temporaryUserName: string = 'miguel';
     private readonly temporaryPass: string = 'pass';
 
     performLogin(user: string, password: string): boolean {
@@ -20,5 +20,8 @@ export class SessionManager {
 
     performLogout() {
         //TODO
+    }
+    getUserName(): string {
+        return this.temporaryUserName;
     }
 }

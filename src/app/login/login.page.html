@@ -5,24 +5,24 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Imagen de Splash -->
-  <div class="splash-container">
-    <ion-img src="assets/icon/login.png"></ion-img>
-  </div>
+  <div class="background-image"></div>
 
   <div class="content-container">
+    <div class="image-container">
+      <ion-img src="assets/icon/logo_3.png"></ion-img>
+    </div>
     <div class="input-container">
       <ion-item>
-        <ion-input placeholder="Usuario" type="text" [(ngModel)]="user"></ion-input>
+        <ion-input placeholder="Usuario" type="text" [(ngModel)]="user" class="input-field"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password"></ion-input>
+        <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password" class="input-field"></ion-input>
       </ion-item>
     </div>
 
     <div class="button-container">
-      <ion-button expand="block" (click)="onLoginButtonPressed()">Login</ion-button>
-      <ion-button expand="block" (click)="onRegisterButtonPressed()">Register</ion-button>
+      <ion-button expand="block" class="login-button" (click)="onLoginButtonPressed()">Login</ion-button>
+      <ion-button expand="block" class="register-button" (click)="onRegisterButtonPressed()">Register</ion-button>
     </div>
   </div>
 </ion-content>
