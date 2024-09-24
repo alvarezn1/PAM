@@ -90,5 +90,12 @@ export class SessionManager {
       }).then(toastData => toastData.present());
     }
 
-    
+    agregar(){
+      this.router.navigate(['agregar']);
+
+    }
+
+    detalle(){
+      this.router.navigate(['detalle']);
+    }
 }

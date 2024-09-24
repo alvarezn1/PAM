@@ -24,6 +24,16 @@ export class HomePage {
     
   }
 
+  async agregar(){
+    await this.sessionManager.agregar()
+
+  }
+
+  async detalle(){
+    await this.sessionManager.detalle()
+
+  }
+  
   ngOnInit(){
     this.route.queryParams.subscribe(params =>{
       this.user.email = params ['email'];

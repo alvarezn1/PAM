@@ -6,6 +6,7 @@
   </ion-header>
 
   <ion-button (click)="logout()">Cerrar sesion</ion-button>
+  
  
 </ion-menu>
 
@@ -17,7 +18,7 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>
-        Home
+        Resumen gastos recientes
       </ion-title>
       
     </ion-toolbar>
@@ -34,6 +35,9 @@
     </ion-header>
     <ion-content class="ion-padding">
       Hola, {{user.email}}
+
+      <ion-button (click)="detalle()">Detalle gastos</ion-button>
+      <ion-button (click)="agregar()">Agregar gastos</ion-button>
       
     </ion-content>
   </ion-content>
