@@ -1,14 +1,16 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>splash</ion-title>
+    <ion-title>Splash</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="background-image">
-    <ion-img src="assets/icon/fondo.png"></ion-img>
+    <div class="content-container">
+      <div class="image-container">
+        <ion-img src="assets/icon/logo_3.png"></ion-img>
+      </div>
+      <ion-progress-bar [value]="progressValue" type="determinate"></ion-progress-bar>
+    </div>
   </div>
-
-  <!-- Barra de Progreso -->
-  <ion-progress-bar [value]="progressValue" type="determinate"></ion-progress-bar>
 </ion-content>

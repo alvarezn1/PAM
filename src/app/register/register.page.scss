@@ -1,0 +1,65 @@
+/* Estilo para el fondo */
+ion-content {
+    --background: url('../../assets/icon/fondo.png') no-repeat center center;
+    --background-size: cover;
+  }
+  
+  /* Estilos para el contenido */
+  .register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px; /* Opcional: bordes redondeados */
+    max-width: 100%;
+    box-sizing: border-box; /* Asegúrate de que el padding no desborde el contenedor */
+    background: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente para contraste */
+  }
+  
+  /* Estilos para el logo */
+  .logo-container {
+    margin-bottom: 100px;
+  }
+  
+  .logo {
+    width: 180px;
+    height: auto;
+  }
+  
+  /* Estilos para los campos de entrada */
+  .input-container {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+  }
+  
+  ion-item {
+    --padding-start: 0;
+    --padding-end: 0;
+    margin-bottom: 10px; /* Espacio entre los campos de entrada */
+  }
+  
+  ion-input {
+    --border-color: #a09f9f;
+    --background: #7c6d6d;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  /* Estilos para el botón */
+  .button-container {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  ion-button {
+    border-radius: 8px;
+    --background: #4CAF50; /* Fondo del botón */
+    --color: #ffffff; /* Color del texto del botón */
+    --padding: 12px; /* Padding interno del botón */
+  }
+  

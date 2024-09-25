@@ -10,13 +10,24 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div class="background-image"></div>
   <ion-header collapse="condense">
   </ion-header>
-
+  <ion-title class="ion-padding">Resumen de gastos recientes</ion-title>
+  <ion-title class="sub-titulo">Presupuesto gastado</ion-title>
   <ion-chip>
     <ion-avatar>
       <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
     </ion-avatar>
     <ion-label>{{ userName }}</ion-label>
   </ion-chip>
+<!-- Contenedor rojo -->
+  <div class="red-container">
+    <span>$1000</span>
+  </div>
+  <!-- Botones circulares -->
+  <div class="button-container">
+    <ion-button class="circle-button">Detalle Gasto</ion-button>
+    <ion-button class="circle-button">+</ion-button>
+  </div>
 </ion-content>
