@@ -1,65 +1,107 @@
-/* Estilo para el fondo */
 ion-content {
-    --background: url('../../assets/icon/fondo.png') no-repeat center center;
-    --background-size: cover;
-  }
-  
-  /* Estilos para el contenido */
-  .register-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border-radius: 10px; /* Opcional: bordes redondeados */
-    max-width: 100%;
-    box-sizing: border-box; /* Asegúrate de que el padding no desborde el contenedor */
-    background: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente para contraste */
-  }
-  
-  /* Estilos para el logo */
-  .logo-container {
-    margin-bottom: 100px;
-  }
-  
-  .logo {
-    width: 180px;
-    height: auto;
-  }
-  
-  /* Estilos para los campos de entrada */
-  .input-container {
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
-  }
-  
-  ion-item {
-    --padding-start: 0;
-    --padding-end: 0;
-    margin-bottom: 10px; /* Espacio entre los campos de entrada */
-  }
-  
-  ion-input {
-    --border-color: #a09f9f;
-    --background: #7c6d6d;
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --border-radius: 8px;
-    margin-bottom: 16px;
-  }
-  
-  /* Estilos para el botón */
-  .button-container {
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  ion-button {
-    border-radius: 8px;
-    --background: #4CAF50; /* Fondo del botón */
-    --color: #ffffff; /* Color del texto del botón */
-    --padding: 12px; /* Padding interno del botón */
-  }
-  
+  --background: transparent; /* Evita que el contenido tenga un fondo por defecto */
+  position: relative;
+}
+
+/* Imagen de fondo */
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../assets/icon/fondo.png');
+  background-size: cover;
+  background-position: center;
+  z-index: -1; /* Mantén la imagen detrás del contenido */
+  opacity: 0.7; /* Ajusta la opacidad si la imagen es muy intensa */
+}
+
+/* Estilos para el contenedor principal */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 10px; /* Bordes redondeados */
+  max-width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente para contraste */
+  z-index: 1; /* Asegura que el contenido esté por encima de la imagen */
+}
+
+/* Estilos para el logo */
+.logo-container {
+  margin-bottom: 100px;
+}
+
+.logo {
+  width: 180px;
+  height: auto;
+}
+
+/* Estilos para los campos de entrada */
+.input-container {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --background: transparent;
+  margin-bottom: 10px; /* Espacio entre los campos de entrada */
+}
+
+ion-input {
+  --border-color: #a09f9f;
+  --background: #7c6d6d;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --border-radius: 8px;
+  --background-activated: transparent;
+  --background-focused: transparent;
+  margin-bottom: 16px;
+}
+
+/* Estilos para el botón */
+.button-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+ion-button {
+  border-radius: 8px;
+  --background: #4CAF50; /* Fondo del botón */
+  --color: #ffffff;
+  --padding: 12px;
+  margin-top: 10px;
+}
+
+ion-button.register-button {
+  --background: #5394f5;
+  --color: #ffffff;
+}
+
+/* Contenedor del contenido */
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  z-index: 1; /* Asegura que el contenido esté por encima de la imagen de fondo */
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente para el contenido */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra alrededor del contenido */
+}
+
+/* Estilo para la imagen encima del input */
+.image-container {
+  margin-bottom: 20px;
+}
