@@ -1,71 +1,15 @@
 ion-content {
-  --background: transparent; /* Evita que el contenido tenga un fondo por defecto */
-  position: relative;
+  display: flex;
+  justify-content: center; /* Centra verticalmente si necesitas */
+  align-items: center; /* Centra horizontalmente */
 }
 
-/* Imagen de fondo */
-.background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('../../assets/icon/fondo.png');
-  background-size: cover;
-  background-position: center;
-  z-index: -1; /* Mantén la imagen detrás del contenido */
-  opacity: 0.7; /* Opcional: puedes ajustar la opacidad si la imagen es muy intensa */
-}
-
-/* Contenedor del contenido */
 .content-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 50px;
-  z-index: 1; /* Asegura que el contenido esté por encima de la imagen de fondo */
-  position: relative;
+  justify-content: flex-end; /* Asegura que los botones estén en la parte inferior */
   width: 100%;
-  max-width: 400px;
-  margin: auto;
-  background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente para el contenido */
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra alrededor del contenido */
-}
-
-/* Estilo para los campos de entrada */
-ion-item {
-  --border-color: #a09f9f;
-  --background: #7c6d6d;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
-  margin-bottom: 16px;
-}
-
-.input-field {
-  --padding-start: 12px;
-  --padding-end: 12px;
-}
-
-.button-container {
-  width: 100%;
-  max-width: 400px;
-}
-
-ion-button {
-  margin-top: 10px;
-  --background: #3880ff;
-  --color: #ffffff;
-}
-
-ion-button.register-button {
-  --background: #5394f5;
-  --color: #ffffff;
-}
-
-/* Estilo para la imagen encima del input */
-.image-container {
-  margin-bottom: 20px;
+  padding: 32px; /* Espacio a los lados */
+  gap: 16px; /* Espacio entre input-container y button-container */
+  height: 100%; /* Asegura que el contenedor ocupe todo el espacio disponible */
 }

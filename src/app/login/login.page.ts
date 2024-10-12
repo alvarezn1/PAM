@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionManager } from 'src/managers/SessionManager';
+import { StorageService } from 'src/managers/StorageService';
 
 @Component({
   selector: 'app-login',
@@ -9,33 +10,43 @@ import { SessionManager } from 'src/managers/SessionManager';
 })
 export class LoginPage implements OnInit {
 
-  constructor(private router: Router, private sessionManager: SessionManager) { }
+  constructor(
+    private router: Router, 
+    private sessionManager: SessionManager,
+    private storageService: StorageService
+  ) { }
 
+    email: string = '';
     user: string = '';
     password: string = '';
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
-  onLoginButtonPressed() {
-    if(this.sessionManager.performLogin(this.user, this.password)) {
-      this.router.navigate(['/home'])
-    } else {
-      this.user=''
-      this.password=''
-      alert('Las credenciales ingresadas son inválidas.')
+  async onLoginButtonPressed() {
+
+    try {
+
+      const userCredential = await this.sessionManager.loginWith(this.email, this.password)
+      const user = userCredential.user
+
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      }
+
+      await this.storageService.set('user', userData)
+      this.router.navigate(['/splash'])
+
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
     }
   }
 
   onRegisterButtonPressed() {
-    this.router.navigate(['/register'])
+    this.router.navigate(['/register']);
   }
 
 }
-
- 
-
-  
-
-
-

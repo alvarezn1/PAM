@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router' 
+import { Router } from '@angular/router';
+import { StorageService } from 'src/managers/StorageService';
 
 @Component({
   selector: 'app-splash',
@@ -8,17 +9,19 @@ import { Router } from '@angular/router'
 })
 export class SplashPage implements OnInit {
   progressValue = 0;
-  constructor(private router: Router) { }
+
+  constructor(private router: Router, private storageService: StorageService) {}
 
   ngOnInit() {
     this.startProgressBar();
     setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 20000); // Navegar a /login después de 20 segundos
+      this.checkSession();
+    }, 2000); // Navegar a la verificación de sesión después de 20 segundos
   }
+
   startProgressBar() {
-    const duration = 20000; // Duración del splash en milisegundos (20 segundos)
-    const interval = 100;   // Intervalo de actualización (100 ms)
+    const duration = 2000; // Duración del splash en milisegundos (20 segundos)
+    const interval = 100;    // Intervalo de actualización (100 ms)
     const increment = interval / duration;
 
     let currentProgress = 0;
@@ -30,5 +33,14 @@ export class SplashPage implements OnInit {
         clearInterval(progressInterval);
       }
     }, interval);
+  }
+
+  async checkSession() {
+    const user = await this.storageService.get('user');
+    if (user) {
+      this.router.navigate(['/home']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 }

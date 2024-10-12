@@ -1,27 +1,43 @@
 import { Injectable } from '@angular/core';
-
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class SessionManager {
+  constructor(public fireAuth: AngularFireAuth) {
+    this.setPersistence();
+  }
 
-    private readonly temporaryUserName: string = 'miguel';
-    private readonly temporaryPass: string = 'pass';
+  private async setPersistence() {
+    try {
+      // Configura la persistencia a LOCAL para que la sesión persista
+      await this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      console.log('Persistencia de sesión configurada a LOCAL');
+    } catch (error) {
+      console.error('Error al configurar la persistencia de sesión:', error);
+    }
+  }
 
-    performLogin(user: string, password: string): boolean {
-        if(user == this.temporaryUserName && password == this.temporaryPass) {
-            return true;
-        } else {
-            return false;
-        }  
-    }
+  async signOut() {
+    return await this.fireAuth.signOut();
+  }
 
-    performLogout() {
-        //TODO
-    }
-    getUserName(): string {
-        return this.temporaryUserName;
-    }
+  async registerUserWith(email: string, password: string): Promise<any> {
+    return await this.fireAuth.createUserWithEmailAndPassword(email, password);
+  }
+
+  async loginWith(email: string, password: string): Promise<any> {
+    return await this.fireAuth.signInWithEmailAndPassword(email, password);
+  }
+
+  async resetPassword(email: string) {
+    return await this.fireAuth.sendPasswordResetEmail(email);
+  }
+
+  async getProfile() {
+    return await this.fireAuth.currentUser;
+  }
 }
