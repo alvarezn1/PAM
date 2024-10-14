@@ -3,29 +3,20 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>register</ion-title>
+    <ion-title>Registrarse</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">REGISTER</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div class="content-container">
-    <div class="input-container">
-      <ion-item>
-        <ion-input placeholder="Correo electrónico" [(ngModel)]="email"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password"></ion-input>
-      </ion-item>
-    </div>
-  
-    <div class="button-container">
-      <ion-button expand="block" (click)="onRegisterButtonPressed()">Register</ion-button>
-    </div>
+<ion-content [fullscreen]="true" class="background-image">
+  <div class="login-container">
+    <div class="login-title">Crea una cuenta</div>
+    <ion-item class="custom-item">
+      <ion-input placeholder="Correo electrónico" type="email" [(ngModel)]="email"></ion-input>
+    </ion-item>
+    <ion-item class="custom-item">
+      <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password"></ion-input>
+    </ion-item>
+    <ion-button expand="block" class="login-button" (click)="onRegisterButtonPressed()">Registrarse</ion-button>
+    <ion-button fill="clear" class="back-to-login-button" (click)="onBackToLogin()">¿Ya tienes una cuenta? Iniciar sesión</ion-button>
   </div>
 </ion-content>

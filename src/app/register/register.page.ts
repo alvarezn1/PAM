@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SessionManager } from 'src/managers/SessionManager';
 import { Router } from '@angular/router';
 import { CancelAlertService } from 'src/managers/CancelAlertService';
-
+import { NavController } from '@ionic/angular';
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -17,7 +17,8 @@ export class RegisterPage {
   constructor(
     private sessionManager: SessionManager, 
     private router: Router,
-    private alert: CancelAlertService
+    private alert: CancelAlertService,
+    private navController: NavController
   ) { }
 
   async onRegisterButtonPressed() {
@@ -90,6 +91,10 @@ export class RegisterPage {
   clean() {
     this.email = ''
     this.password = ''
+  }
+
+  onBackToLogin() {
+    this.navController.navigateBack('/login'); // Navega hacia la página de inicio de sesión
   }
   
 }

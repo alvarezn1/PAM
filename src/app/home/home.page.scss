@@ -1,16 +1,55 @@
+.background-image {
+  --background: url('../../assets/icon/fondo.png') no-repeat center center / cover;
+}
+#total-container {
+  text-align: center;
+  margin-top: 20px;
+}
 
-.container-center {
+#total-container div {
+  width: 100px;
+  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
-  text-align: center; 
+  border: 1px solid rgb(21, 255, 111);
+  margin: 0 auto;
+  font-size: 24px;
 }
 
+#expenses-container, 
+#expenses-container-2 {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
 
-.close-session-button {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
+#expenses-container div, 
+#expenses-container-2 div {
+  width: 150px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(255, 0, 0);
+  font-size: 18px;
+}
+
+#add-circle-container {
+  text-align: center;
+  margin-top: 40px;
+  color:red;
+}
+
+#add-circle-container div {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgb(255, 0, 0);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  font-size: 36px;
 }
