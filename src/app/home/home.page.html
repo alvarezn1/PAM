@@ -18,64 +18,65 @@
 </ion-header>
 
 <ion-content class="background-image ion-padding" fullscreen>
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <!-- El título ha sido eliminado como pediste -->
-    </ion-toolbar>
-  </ion-header>
-
   <!-- Título de Total y cuadro con signo de peso -->
   <div id="total-container">
-    <h2>Total</h2>
-    <div>${{ initialAmount }}</div> <!-- Muestra el monto inicial -->
+    <h2 class="total-title">Total:</h2>
+    <div class="amount">${{ initialAmount }}</div> <!-- Muestra el monto inicial -->
   </div>
+  
 
   <!-- Botón para reiniciar el monto -->
-  <ion-button (click)="resetInitialAmount()">Reiniciar Monto</ion-button>
+  <div class="reset-button-container">
+    <ion-button (click)="resetInitialAmount()">Reiniciar Monto</ion-button>
+  </div>
 
+<!-- Contenedor principal para los gastos -->
+<div class="expenses-wrapper">
   <!-- Primer fila de cuadrados con la palabra "Gastos" -->
   <div id="expenses-container">
-    <div>Gastos</div>
-    <div>Gastos</div>
+    <h3 class="expense-title">Gastos</h3>
+    <div class="expense-box">Detalles del gasto 1</div>
   </div>
 
   <!-- Segunda fila de cuadrados con la palabra "Gastos" -->
   <div id="expenses-container-2">
-    <div></div>
-    <div></div>
+    <h3 class="expense-title">Ingresos</h3>
+    <div class="expense-box">Detalles del gasto 3</div>
   </div>
+</div>
 
-  <!-- Círculo con signo más al centro -->
-  <div id="add-circle-container" (click)="showAddDialog()">
-    <div>+</div>
-  </div>
 
-  <!-- Tasas de Cambio -->
-  <div *ngIf="rates; else loading">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <h2>Tasas de Cambio</h2>
-          <ion-list>
-            <!-- Muestra solo las primeras 5 tasas de cambio -->
-            <ion-item *ngFor="let rate of rates.conversion_rates | keyvalue | slice:0:visibleRates">
-              <ion-label>
-                <h2>{{ rate.key }}</h2>
-                <p>{{ rate.value }}</p>
-              </ion-label>
-            </ion-item>
-          </ion-list>
-          <!-- Botón "Ver más" para mostrar más tasas -->
-          <ion-button *ngIf="visibleRates < (rates.conversion_rates | keyvalue).length" (click)="showMore()">
-            Ver más
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
+<!-- Círculo con signo más al centro -->
+<div id="add-circle-container" (click)="showAddDialog()" class="add-circle">
+  <div class="add-icon">+</div>
+</div>
 
-  <!-- Cargando tasas de cambio -->
-  <ng-template #loading>
-    <p>Cargando tasas de cambio...</p>
-  </ng-template>
-</ion-content>
+
+<!-- Tasas de Cambio -->
+<div *ngIf="rates; else loading" class="exchange-rate-container">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <h2 class="exchange-title">Tasas de Cambio</h2>
+        <ion-list class="exchange-list">
+          <!-- Muestra solo las primeras 5 tasas de cambio -->
+          <ion-item *ngFor="let rate of rates.conversion_rates | keyvalue | slice:0:visibleRates" class="exchange-item">
+            <ion-label>
+              <h3>{{ rate.key }}</h3>
+              <p class="exchange-value">{{ rate.value }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <!-- Botón "Ver más" para mostrar más tasas -->
+        <ion-button *ngIf="visibleRates < (rates.conversion_rates | keyvalue).length" (click)="showMore()" expand="full" class="show-more-button">
+          Ver más
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
+
+<!-- Cargando tasas de cambio -->
+<ng-template #loading>
+  <p>Cargando tasas de cambio...</p>
+</ng-template>

@@ -1,55 +1,148 @@
-.background-image {
-  --background: url('../../assets/icon/fondo.png') no-repeat center center / cover;
-}
+/* Estilos para el contenedor total */
 #total-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #ccc; /* Borde para mayor visibilidad */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: rgba(233, 240, 235, 0.8); /* Fondo con un poco de transparencia */
+  width: auto; /* Ajusta el ancho automáticamente */
+  max-width: 90%; /* Ancho máximo del contenedor */
+  margin: 20px auto; /* Centrar el contenedor */
   text-align: center;
-  margin-top: 20px;
 }
 
 #total-container div {
-  width: 100px;
-  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgb(21, 255, 111);
-  margin: 0 auto;
-  font-size: 24px;
+  font-size: 24px; /* Tamaño de fuente más grande para el monto */
+  font-weight: bold; /* Hacer que el monto sea más destacado */
+  color: #333; /* Color del texto */
 }
 
-#expenses-container, 
+/* Estilos para el contenedor de tipos de cambio */
+.exchange-rate-container {
+  margin: 20px;
+  border-radius: 10px;
+  background-color: #ffffff; /* Fondo blanco para contraste */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  padding: 20px;
+}
+
+/* Botón para reiniciar el monto */
+.reset-button-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  margin: 20px 0; /* Espaciado superior e inferior */
+}
+
+.exchange-title {
+  text-align: center;
+  font-size: 1.5rem; /* Tamaño de fuente más grande para el título */
+  margin-bottom: 15px;
+  color: #3880ff; /* Color del título */
+}
+
+.exchange-list {
+  margin: 0;
+  padding: 0;
+}
+
+.exchange-item {
+  border-bottom: 1px solid #e0e0e0; /* Línea divisoria entre elementos */
+  padding: 10px 0;
+}
+
+.exchange-item:last-child {
+  border-bottom: none; /* Sin línea divisoria en el último elemento */
+}
+
+.exchange-value {
+  font-size: 1.2rem; /* Tamaño de fuente para el valor */
+  color: #28a745; /* Color verde para el valor */
+}
+
+.show-more-button {
+  margin-top: 10px;
+  background-color: #3880ff; /* Color del botón */
+  color: white; /* Texto blanco en el botón */
+  font-weight: bold; /* Negrita en el texto del botón */
+}
+
+/* Estilos para la imagen de fondo */
+.background-image {
+  --background: url('../../assets/icon/fondo.png') no-repeat center center / cover;
+}
+.total-title {
+  color: black; /* Cambia el color del texto a negro */
+}
+
+
+.expenses-wrapper {
+  display: flex; /* Usar flexbox para alinear los elementos */
+  justify-content: space-between; /* Espaciado entre los contenedores */
+  margin-bottom: 20px; /* Espaciado inferior entre secciones */
+}
+
+#expenses-container,
 #expenses-container-2 {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  flex: 1; /* Hacer que cada contenedor tome el mismo ancho */
+  margin: 0 10px; /* Espaciado lateral entre contenedores */
+  border: 1px solid #ccc; /* Borde alrededor del contenedor */
+  border-radius: 8px; /* Esquinas redondeadas */
+  padding: 10px; /* Espaciado interno */
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con un poco de transparencia */
 }
 
-#expenses-container div, 
-#expenses-container-2 div {
-  width: 150px;
-  height: 100px;
+.expense-title {
+  font-size: 1.5rem; /* Tamaño de fuente más grande para los títulos */
+  margin-bottom: 10px; /* Espaciado inferior */
+  text-align: center; /* Centrar el texto del título */
+  color: #333; /* Color del texto */
+}
+
+.expense-box {
+  width: 100%; /* Ancho completo del contenedor */
+  padding: 15px; /* Espaciado interno para los elementos de gasto */
+  margin: 5px 0; /* Espaciado superior e inferior entre los gastos */
+  border: 1px solid #007bff; /* Borde azul alrededor de cada gasto */
+  border-radius: 5px; /* Esquinas redondeadas */
+  background-color: #f8f9fa; /* Fondo claro para cada gasto */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera para profundidad */
+}
+
+
+/* Estilos para el contenedor del círculo de agregar */
+.add-circle {
+  width: 80px; /* Aumenta el tamaño del círculo */
+  height: 80px;
+  border-radius: 50%; /* Hace que sea un círculo */
+  background-color: #3880ff; /* Color de fondo */
+  color: white; /* Color del signo + */
   display: flex;
+  margin: 20px auto; /* Centrar el contenedor */
   justify-content: center;
   align-items: center;
-  border: 1px solid rgb(255, 0, 0);
-  font-size: 18px;
+  font-size: 36px; /* Tamaño del signo + */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el círculo */
+  transition: transform 0.2s; /* Transición suave al hacer hover */
 }
 
+.add-circle:hover {
+  transform: scale(1.05); /* Efecto de escalado al pasar el mouse */
+}
+
+.add-icon {
+  font-weight: bold; /* Negrita para el signo + */
+}
+
+/* Estilos para el contenedor del círculo de agregar */
 #add-circle-container {
   text-align: center;
   margin-top: 40px;
-  color:red;
-}
-
-#add-circle-container div {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background-color: rgb(255, 0, 0);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  font-size: 36px;
+  color: rgb(255, 255, 255);
 }

@@ -1,21 +1,15 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Iniciar sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="background-image ion-padding">
+<ion-content class="background-image ion-padding" fullscreen>
   <div class="login-container">
     <h1 class="login-title">Bienvenido de nuevo</h1>
 
     <ion-item class="custom-item no-border">
       <ion-label position="floating">Correo electrónico</ion-label>
-      <ion-input [(ngModel)]="email" type="email"></ion-input>
+      <ion-input placeholder="Correo electrónico" [(ngModel)]="email" type="email"></ion-input>
     </ion-item>
 
     <ion-item class="custom-item no-border">
       <ion-label position="floating">Contraseña</ion-label>
-      <ion-input [(ngModel)]="password" type="password"></ion-input>
+      <ion-input placeholder="Contraseña" [(ngModel)]="password" type="password"></ion-input>
     </ion-item>
 
     <ion-button expand="full" color="primary" class="login-button" (click)="onLoginButtonPressed()">Iniciar sesión</ion-button>
