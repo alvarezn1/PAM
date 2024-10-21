@@ -1,34 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular'; 
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { AlertController } from '@ionic/angular';
 import { ExchangeRateService } from '../../managers/exchange-rate.service';
 import { StorageService } from 'src/managers/StorageService';
 import { Router } from '@angular/router';
 import { CancelAlertService } from 'src/managers/CancelAlertService';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
   rates: any;
   email: string = '';
-  visibleRates: number = 5; 
-  initialAmount: number = 0; 
-  user: any; 
+  visibleRates: number = 5;
+  initialAmount: number = 0;
+  user: any;
 
   constructor(
+    private db: AngularFireDatabase,
+    private afAuth: AngularFireAuth,
     private exchangeRateService: ExchangeRateService,
     private router: Router,
     private storageService: StorageService,
     private cancelAlertService: CancelAlertService,
-    private alertController: AlertController 
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
     this.loadExchangeRates();
     this.loadData();
-    this.loadInitialAmount(); 
+    this.loadInitialAmount();
   }
 
   loadExchangeRates() {
@@ -59,12 +64,20 @@ export class HomePage implements OnInit {
   }
 
   async loadInitialAmount() {
-    const storedAmount = localStorage.getItem('initialAmount');
-    if (storedAmount) {
-      this.initialAmount = parseFloat(storedAmount);
-    } else {
-      // Si no hay un monto inicial guardado, solicita al usuario que ingrese uno
-      await this.showInitialAmountPrompt();
+    try {
+      const user = await this.afAuth.user.pipe(first()).toPromise();
+      if (user) {
+        // Recupera el monto inicial del usuario desde Firebase
+        this.db.database.ref(`usuarios/${user.uid}/montoInicial`).once('value').then(snapshot => {
+          this.initialAmount = snapshot.val() || 0;
+          localStorage.setItem('initialAmount', this.initialAmount.toString());
+        });
+      } else {
+        // Si no hay un usuario autenticado, solicita al usuario que ingrese uno
+        await this.showInitialAmountPrompt();
+      }
+    } catch (error) {
+      console.error('Error al cargar el monto inicial:', error);
     }
   }
 
@@ -159,8 +172,17 @@ export class HomePage implements OnInit {
           handler: async (data) => {
             const newAmount = parseFloat(data.newAmount);
             if (!isNaN(newAmount)) {
-              this.initialAmount = newAmount; 
+              this.initialAmount = newAmount;
               localStorage.setItem('initialAmount', newAmount.toString());
+
+              // Actualiza el monto inicial en Firebase
+              const user = await this.afAuth.user.pipe(first()).toPromise();
+              if (user) {
+                await this.db.database.ref(`usuarios/${user.uid}/montoInicial`).set(newAmount);
+                console.log(`Monto inicial actualizado en Firebase: ${newAmount}`);
+              } else {
+                await this.showErrorAlert('No hay usuario autenticado para actualizar el monto inicial en Firebase.');
+              }
             } else {
               await this.showErrorAlert('Por favor, ingresa un monto válido.');
             }
@@ -168,8 +190,12 @@ export class HomePage implements OnInit {
         },
       ],
     });
-
+  
     await alert.present();
+  }
+
+  getFormattedInitialAmount(): string {
+    return this.initialAmount.toLocaleString('es-CL', { minimumFractionDigits: 0 });
   }
 
   private async showErrorAlert(message: string) {
