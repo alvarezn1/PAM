@@ -28,16 +28,22 @@ export class LoginPage implements OnInit {
     try {
       const userCredential = await this.sessionManager.loginWith(this.email, this.password);
       const user = userCredential.user;
-
-      // Aquí preguntas al usuario por el monto inicial
-      const montoInicial = prompt('Por favor, ingresa tu monto inicial:');
+  
+      // Verificamos si el usuario ya tiene un monto inicial en la base de datos
+      const montoRef = this.db.database.ref(`usuarios/${user.uid}/montoInicial`);
+      const snapshot = await montoRef.once('value');
       
-      if (montoInicial) {
-        // Guardas el monto inicial en la Realtime Database
-        await this.db.database.ref(`usuarios/${user.uid}/montoInicial`).set(montoInicial);
+      if (!snapshot.exists()) {
+        // Si no existe el monto inicial, lo solicitamos al usuario
+        const montoInicial = prompt('Por favor, ingresa tu monto inicial:');
+        
+        if (montoInicial) {
+          // Guardamos el monto inicial en la Realtime Database
+          await montoRef.set(montoInicial);
+        }
       }
-
-      // Guarda la información del usuario en el almacenamiento local
+  
+      // Guardamos la información del usuario en el almacenamiento local
       const userData = {
         uid: user.uid,
         email: user.email,
@@ -47,13 +53,14 @@ export class LoginPage implements OnInit {
       };
       
       await this.storageService.set('user', userData);
-      
-      // Rediriges al usuario a la página de inicio
+  
+      // Redirigimos al usuario a la página de inicio
       this.router.navigate(['/splash']);
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }
   }
+  
 
   onRegisterButtonPressed() {
     this.router.navigate(['/register']);
