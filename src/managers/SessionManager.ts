@@ -40,4 +40,9 @@ export class SessionManager {
   async getProfile() {
     return await this.fireAuth.currentUser;
   }
+  async getCurrentUserId(): Promise<string | null> {
+  const user = await this.fireAuth.currentUser;
+  return user ? user.uid : null; // Devuelve el ID del usuario o null si no está autenticado
+}
+
 }

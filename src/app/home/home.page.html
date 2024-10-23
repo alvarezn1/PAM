@@ -30,18 +30,19 @@
     <ion-button (click)="resetInitialAmount()">Reiniciar Monto</ion-button>
   </div>
 
-<!-- Contenedor principal para los gastos -->
-<div class="expenses-wrapper">
-  <!-- Primer fila de cuadrados con la palabra "Gastos" -->
-  <div id="expenses-container">
-    <h3 class="expense-title">Gastos</h3>
-    <div class="expense-box">Detalles del gasto 1</div>
-  </div>
-
+  <!-- Contenedor principal para los gastos -->
+  <div class="expenses-wrapper">
+    <!-- Primer fila de cuadrados con la palabra "Gastos" -->
+    <div id="expenses-container">
+      <h3 class="expense-title">Gastos</h3>
+      <div class="expense-box">
+        <ion-button (click)="goToGastos()">Detalles del Gasto</ion-button> <!-- Botón para ir a la vista de gastos -->
+      </div>
+    </div>
   <!-- Segunda fila de cuadrados con la palabra "Gastos" -->
   <div id="expenses-container-2">
     <h3 class="expense-title">Ingresos</h3>
-    <div class="expense-box">Detalles del gasto 3</div>
+    <div class="expense-box">Detalles de Ingresos</div>
   </div>
 </div>
 

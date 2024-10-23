@@ -1,48 +1,32 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Gastos</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-    </ion-toolbar>
-  </ion-header>
-
-  <!-- Cuadro para el título "Gastos" -->
-  <div class="square-container">
-    <h2>Gastos</h2>
-  </div>
-
   <!-- Cuadro para ingresar la cantidad -->
   <div class="input-container">
     <ion-label>Cantidad</ion-label>
-    <ion-input type="number" placeholder="Ingresa la cantidad"></ion-input>
+    <ion-input type="number" placeholder="Ingresa la cantidad" [(ngModel)]="cantidad"></ion-input>
   </div>
 
   <!-- Cuadro para la categoría -->
   <div class="category-container">
     <p>Categoría</p>
-    <ion-input placeholder="Ingresa la categoría"></ion-input>
+    <ion-input placeholder="Ingresa la categoría" [(ngModel)]="categoria"></ion-input>
   </div>
 
   <!-- Cuadro para la fecha -->
   <div class="date-container">
     <p>Fecha</p>
-    <ion-input type="date"></ion-input>
+    <ion-input type="date" [(ngModel)]="fecha"></ion-input>
   </div>
 
   <!-- Cuadro para el comentario -->
   <div class="comment-container">
     <p>Comentario</p>
-    <ion-textarea placeholder="Agrega un comentario"></ion-textarea>
+    <ion-textarea placeholder="Agrega un comentario" [(ngModel)]="comentario"></ion-textarea>
   </div>
 
   <!-- Cuadro para la foto -->
   <div class="photo-container">
     <p>Foto</p>
-    <ion-input type="file" accept="image/*"></ion-input>
+    <ion-input type="file" accept="image/*" (change)="onFileSelected($event)"></ion-input>
   </div>
 
   <!-- Botón para añadir -->

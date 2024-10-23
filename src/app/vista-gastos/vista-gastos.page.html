@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Detalles de Gastos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let gasto of gastos" lines="full">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ gasto.categoria }}</ion-card-title>
+          <ion-card-subtitle>{{ gasto.fecha }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <div class="gasto-details">
+            <ion-icon name="cash" class="gasto-icon" slot="start"></ion-icon>
+            <p class="gasto-amount">Cantidad: <strong>${{ gasto.cantidad }}</strong></p>
+          </div>
+          <p>Comentario: {{ gasto.comentario }}</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="gastos.length === 0" class="no-gastos">
+    <ion-icon name="alert-circle" size="large"></ion-icon>
+    <p>No hay gastos registrados.</p>
+  </div>
+</ion-content>

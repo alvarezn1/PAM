@@ -193,7 +193,9 @@ export class HomePage implements OnInit {
   
     await alert.present();
   }
-
+  goToGastos() {
+    this.router.navigate(['/vista-gastos']); // Redirige a la vista de gastos
+  }
   getFormattedInitialAmount(): string {
     return this.initialAmount.toLocaleString('es-CL', { minimumFractionDigits: 0 });
   }
