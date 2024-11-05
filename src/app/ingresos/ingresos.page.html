@@ -1,13 +1,45 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Ingresos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title></ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Ingresos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Cuadro para ingresar la cantidad -->
+  <div class="input-container">
+    <ion-label>Cantidad</ion-label>
+    <ion-input type="number" placeholder="Ingresa la cantidad" [(ngModel)]="cantidad"></ion-input>
+  </div>
+
+  <!-- Cuadro para la categoría -->
+  <div class="category-container">
+    <p>Categoría</p>
+    <ion-input placeholder="Ingresa la categoría" [(ngModel)]="categoria"></ion-input>
+  </div>
+
+  <!-- Cuadro para la fecha -->
+  <div class="date-container">
+    <p>Fecha</p>
+    <ion-input type="date" [(ngModel)]="fecha"></ion-input>
+  </div>
+
+  <!-- Cuadro para el comentario -->
+  <div class="comment-container">
+    <p>Comentario</p>
+    <ion-textarea placeholder="Agrega un comentario" [(ngModel)]="comentario"></ion-textarea>
+  </div>
+
+  <!-- Cuadro para la foto -->
+  <div class="photo-container">
+    <p>Foto</p>
+    <ion-input type="file" accept="image/*" (change)="onFileSelected($event)"></ion-input>
+  </div>
+
+  <!-- Botón para añadir -->
+  <div class="button-container">
+    <ion-button expand="full" (click)="addIngreso()">Añadir</ion-button>
+  </div>
 </ion-content>

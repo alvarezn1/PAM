@@ -1,0 +1,38 @@
+ion-card {
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .gasto-details {
+    display: flex;
+    align-items: center;
+  }
+  
+  .gasto-icon {
+    font-size: 24px;
+    color: var(--ion-color-primary);
+    margin-right: 8px;
+  }
+  
+  .gasto-amount {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--ion-color-dark);
+  }
+  
+  .no-gastos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 56px); /* Ajustar según el tamaño del header */
+    text-align: center;
+    color: var(--ion-color-medium);
+  }
+  
+  .no-gastos ion-icon {
+    margin-bottom: 8px;
+    font-size: 48px; /* Tamaño más grande para mayor impacto */
+  }
+  

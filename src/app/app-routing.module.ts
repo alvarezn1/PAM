@@ -35,6 +35,10 @@ const routes: Routes = [
     path: 'vista-gastos',
     loadChildren: () => import('./vista-gastos/vista-gastos.module').then( m => m.VistaGastosPageModule)
   },
+  {
+    path: 'vista-ingresos',
+    loadChildren: () => import('./vista-ingresos/vista-ingresos.module').then( m => m.VistaIngresosPageModule)
+  },
 
 ];
 

@@ -1,0 +1,16 @@
+.square-container, .input-container, .category-container, .date-container, .comment-container, .photo-container {
+    background-color: #948c8c; /* Color de fondo claro */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 15px; /* Espaciado interno */
+    margin: 10px 0; /* Espaciado externo */
+  }
+  
+  h2 {
+    margin: 0; /* Sin margen para el título */
+    text-align: center; /* Centrando el texto */
+  }
+  
+  ion-label {
+    font-weight: bold; /* Etiquetas en negrita */
+  }
+  

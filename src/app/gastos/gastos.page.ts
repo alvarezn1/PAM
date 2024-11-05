@@ -56,6 +56,10 @@ export class GastosPage implements OnInit {
       comentario: this.comentario,
     };
 
+
+
+    
+
     this.db.list(`usuarios/${userId}/gastos`).push(expenseData)
       .then(() => {
         this.showAlert('Gasto añadido con éxito');
@@ -64,6 +68,43 @@ export class GastosPage implements OnInit {
       })
       .catch(error => {
         this.showAlert(`Error al añadir el gasto: ${error.message}`);
+      });
+  }
+
+
+  async addIngreso() {
+    const user = await this.afAuth.currentUser;
+    const userId = user?.uid;
+
+    if (!userId) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'No estás autenticado. Por favor, inicia sesión.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+      return;
+    }
+
+    const ingresoData = {
+      cantidad: this.cantidad,
+      categoria: this.categoria,
+      fecha: this.fecha,
+      comentario: this.comentario,
+    };
+
+
+
+    
+
+    this.db.list(`usuarios/${userId}/ingresos`).push(ingresoData)
+      .then(() => {
+        this.showAlert('Ingreso añadido con éxito');
+        this.resetForm();
+        this.router.navigate(['/home']); // Redirige a la vista del home
+      })
+      .catch(error => {
+        this.showAlert(`Error al añadir el ingreso: ${error.message}`);
       });
   }
 

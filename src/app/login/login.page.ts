@@ -55,7 +55,7 @@ export class LoginPage implements OnInit {
       await this.storageService.set('user', userData);
   
       // Redirigimos al usuario a la página de inicio
-      this.router.navigate(['/splash']);
+      this.router.navigate(['/home']);
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }

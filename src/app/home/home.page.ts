@@ -141,7 +141,7 @@ export class HomePage implements OnInit {
       '¿Estás seguro de que quieres cerrar sesión?',
       async () => {
         await this.storageService.clear();
-        this.router.navigate(['/splash']);
+        this.router.navigate(['/login']);
         console.log('Sesión cerrada y almacenamiento limpiado.');
       },
       () => console.log('Sesión no cerrada')
@@ -195,6 +195,9 @@ export class HomePage implements OnInit {
   }
   goToGastos() {
     this.router.navigate(['/vista-gastos']); // Redirige a la vista de gastos
+  }
+  goToIngreso() {
+    this.router.navigate(['/vista-ingresos']); // Redirige a la vista de gastos
   }
   getFormattedInitialAmount(): string {
     return this.initialAmount.toLocaleString('es-CL', { minimumFractionDigits: 0 });
