@@ -1,12 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Detalles de Gastos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding fondo-gastos">
   <ion-list>
-    <ion-item *ngFor="let gasto of gastos" lines="full">
+    <ion-item *ngFor="let gasto of gastos" lines="none">
       <ion-card>
         <ion-card-header>
           <ion-card-title>{{ gasto.categoria }}</ion-card-title>
@@ -15,10 +18,16 @@
 
         <ion-card-content>
           <div class="gasto-details">
-            <ion-icon name="cash" class="gasto-icon" slot="start"></ion-icon>
+            <ion-icon name="cash-outline" class="gasto-icon" slot="start"></ion-icon>
             <p class="gasto-amount">Cantidad: <strong>${{ gasto.cantidad }}</strong></p>
           </div>
           <p>Comentario: {{ gasto.comentario }}</p>
+          
+          <div class="button-container">
+            <ion-button color="danger" fill="solid" size="small" (click)="eliminarGasto(gasto.id)">
+              Eliminar
+            </ion-button>
+          </div>
         </ion-card-content>
       </ion-card>
     </ion-item>

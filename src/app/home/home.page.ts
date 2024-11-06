@@ -7,7 +7,11 @@ import { StorageService } from 'src/managers/StorageService';
 import { Router } from '@angular/router';
 import { CancelAlertService } from 'src/managers/CancelAlertService';
 import { first } from 'rxjs/operators';
-
+import { InitialAmountCase } from '../use-cases/initial-amount.use-case';
+import { NavigationSessionCase } from '../use-cases/navigation-session.use-case';
+import { ExpenseManagementCase } from '../use-cases/expense-management.use-case';
+import { ExternalDataCase } from '../use-cases/external-data.use-case';
+import { ErrorAlertCase } from '../use-cases/error-alert.use-case';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -25,9 +29,15 @@ export class HomePage implements OnInit {
     private afAuth: AngularFireAuth,
     private exchangeRateService: ExchangeRateService,
     private router: Router,
+    private navigationSessionCase: NavigationSessionCase,
+    private initialAmountCase: InitialAmountCase,
     private storageService: StorageService,
     private cancelAlertService: CancelAlertService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private expenseManagementCase: ExpenseManagementCase,
+    private externalDataCase: ExternalDataCase,
+    private errorAlertCase: ErrorAlertCase,
+
   ) {}
 
   ngOnInit() {
@@ -37,14 +47,14 @@ export class HomePage implements OnInit {
   }
 
   loadExchangeRates() {
-    this.exchangeRateService.getExchangeRates('USD').subscribe(
+    this.externalDataCase.getExchangeRates('USD').subscribe(
       data => {
         this.rates = data;
         console.log(this.rates);
       },
       error => {
         console.error('Error fetching exchange rates', error);
-        this.showErrorAlert('Error al obtener las tasas de cambio.'); // Muestra un alert
+        this.errorAlertCase.showErrorAlert('Error al obtener las tasas de cambio.');
       }
     );
   }
@@ -115,25 +125,9 @@ export class HomePage implements OnInit {
   }
 
   async showAddDialog() {
-    const alert = await this.alertController.create({
-      header: 'Añadir',
-      buttons: [
-        {
-          text: 'Gasto',
-          handler: () => this.router.navigate(['/gastos']),
-        },
-        {
-          text: 'Ingreso',
-          handler: () => this.router.navigate(['/ingresos']),
-        },
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        }
-      ]
-    });
-    await alert.present();
+    await this.expenseManagementCase.showAddDialog();
   }
+
 
   async onSignOutButtonPressed() {
     this.cancelAlertService.showAlert(
@@ -153,48 +147,11 @@ export class HomePage implements OnInit {
   }
 
   async resetInitialAmount() {
-    const alert = await this.alertController.create({
-      header: 'Reiniciar Monto',
-      inputs: [
-        {
-          name: 'newAmount',
-          type: 'number',
-          placeholder: 'Ingresa nuevo monto',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Reiniciar',
-          handler: async (data) => {
-            const newAmount = parseFloat(data.newAmount);
-            if (!isNaN(newAmount)) {
-              this.initialAmount = newAmount;
-              localStorage.setItem('initialAmount', newAmount.toString());
-
-              // Actualiza el monto inicial en Firebase
-              const user = await this.afAuth.user.pipe(first()).toPromise();
-              if (user) {
-                await this.db.database.ref(`usuarios/${user.uid}/montoInicial`).set(newAmount);
-                console.log(`Monto inicial actualizado en Firebase: ${newAmount}`);
-              } else {
-                await this.showErrorAlert('No hay usuario autenticado para actualizar el monto inicial en Firebase.');
-              }
-            } else {
-              await this.showErrorAlert('Por favor, ingresa un monto válido.');
-            }
-          },
-        },
-      ],
-    });
-  
-    await alert.present();
+    await this.initialAmountCase.resetInitialAmount();
   }
+  // Navegar a la vista de gastos
   goToGastos() {
-    this.router.navigate(['/vista-gastos']); // Redirige a la vista de gastos
+    this.navigationSessionCase.goToGastos();
   }
   getFormattedInitialAmount(): string {
     return this.initialAmount.toLocaleString('es-CL', { minimumFractionDigits: 0 });
