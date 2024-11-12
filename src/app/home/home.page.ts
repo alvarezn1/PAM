@@ -23,7 +23,7 @@ export class HomePage implements OnInit {
   visibleRates: number = 5;
   initialAmount: number = 0;
   user: any;
-
+  montoGastado: number = 0;
   constructor(
     private db: AngularFireDatabase,
     private afAuth: AngularFireAuth,
@@ -41,6 +41,7 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.montoGastado = this.getMontoGastadoFromLocalStorage(); // Recupera el monto desde localStorage
     this.loadExchangeRates();
     this.loadData();
     this.loadInitialAmount();
@@ -165,4 +166,10 @@ export class HomePage implements OnInit {
     });
     await errorAlert.present();
   }
-}
+  //resta el gasto al monto inicial
+  getMontoGastadoFromLocalStorage(): number {
+    const monto = localStorage.getItem('montoGastado');
+    return monto ? parseFloat(monto) : 0; // Si no existe, retorna 0
+  }
+  
+  }

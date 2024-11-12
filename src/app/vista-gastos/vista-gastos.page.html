@@ -19,10 +19,13 @@
         <ion-card-content>
           <div class="gasto-details">
             <ion-icon name="cash-outline" class="gasto-icon" slot="start"></ion-icon>
-            <p class="gasto-amount">Cantidad: <strong>${{ gasto.cantidad }}</strong></p>
+            <p class="gasto-amount">Cantidad: <strong>${{ gasto.Monto_Gastado }}</strong></p>
           </div>
           <p>Comentario: {{ gasto.comentario }}</p>
           
+          <!-- Mostrar la ubicación aquí -->
+          <p><strong>Descripcion de ubicacion:</strong> {{ gasto.Comentario_ubicacion }}</p>
+
           <div class="button-container">
             <ion-button color="danger" fill="solid" size="small" (click)="eliminarGasto(gasto.id)">
               Eliminar
