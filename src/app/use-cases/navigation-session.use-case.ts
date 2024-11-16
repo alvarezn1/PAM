@@ -61,7 +61,10 @@ export class NavigationSessionCase {
   goToGastos() {
     this.router.navigate(['/vista-gastos']);
   }
-
+  goToIngresos() {
+    this.router.navigate(['/vista-ingresos']);  // Navega a la ruta configurada en app-routing.module.ts
+  }
+  
   // Lógica para cerrar la sesión del usuario
   async signOut() {
     await this.storageService.clear();

@@ -59,7 +59,7 @@ export class GastosPage implements OnInit {
         
         // Llamar a la función de gestión de gastos
         await this.expenseManagementCase.addExpense(expenseData);
-        await this.errorAlertCase.showErrorAlert('Gasto añadido con éxito');
+        await this.errorAlertCase.showErrorAlert('Gasto añadido con éxito','Exito');
         this.resetForm();
         this.router.navigate(['/home']);
       } else {

@@ -1,13 +1,91 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Ingresos</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Cuadro para ingresar la cantidad -->
+  <form #expenseForm="ngForm">
+    <div class="input-container">
+      <ion-label>Monto de Ingreso</ion-label>
+      <ion-input 
+        type="number" 
+        placeholder="Ingresa la cantidad" 
+        [(ngModel)]="Monto_Ingresado" 
+        name="cantidad" 
+        required 
+        min="0"
+        #cantidadInput="ngModel"
+      ></ion-input>
+      <div *ngIf="cantidadInput.invalid && cantidadInput.touched" class="error-message">
+        El monto debe ser un número positivo.
+      </div>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Ingresos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- Cuadro para la categoría -->
+    <div class="category-container">
+      <p>Categoría</p>
+      <ion-input 
+        placeholder="Ingresa la categoría" 
+        [(ngModel)]="categoria" 
+        name="categoria" 
+        required 
+        pattern="[A-Za-z]+"
+        #categoriaInput="ngModel"
+      ></ion-input>
+      <div *ngIf="categoriaInput.invalid && categoriaInput.touched" class="error-message">
+        La categoría es obligatoria y solo debe contener letras.
+      </div>
+    </div>
+
+    <!-- Cuadro para la fecha -->
+    <div class="date-container">
+      <p>Fecha</p>
+      <ion-input 
+        type="date" 
+        [(ngModel)]="fecha" 
+        name="fecha" 
+        required
+        #fechaInput="ngModel"
+      ></ion-input>
+      <div *ngIf="fechaInput.invalid && fechaInput.touched" class="error-message">
+        La fecha es obligatoria.
+      </div>
+    </div>
+
+    <!-- Cuadro para el comentario -->
+    <div class="comment-container">
+      <p>Comentario</p>
+      <ion-textarea 
+        placeholder="Agrega un comentario" 
+        [(ngModel)]="comentario" 
+        name="comentario" 
+        maxlength="250"
+        #comentarioInput="ngModel"
+      ></ion-textarea>
+      <div *ngIf="comentarioInput.invalid && comentarioInput.touched" class="error-message">
+        El comentario no puede superar los 250 caracteres.
+      </div>
+    </div>
+
+    <!-- Cuadro para la ubicación -->
+    <div class="location-container">
+      <p>Describe la ubicación</p>
+      <ion-input 
+        placeholder="Agrega un comentario" 
+        [(ngModel)]="Comentario_ubicacion" 
+        name="ubicacion" 
+        required
+        #ubicacionInput="ngModel"
+      ></ion-input>
+      <div *ngIf="ubicacionInput.invalid && ubicacionInput.touched" class="error-message">
+        La ubicación es obligatoria.
+      </div>
+    </div>
+
+    <!-- Botón para añadir -->
+    <div class="button-container">
+      <ion-button expand="full" (click)="addIncome()" [disabled]="!expenseForm.valid">Añadir</ion-button>
+    </div>
+
+    <!-- Botón para volver al home -->
+    <div class="home-button-container">
+      <ion-button expand="full" (click)="goHome()">Volver al Home</ion-button>
+    </div>
+  </form>
 </ion-content>

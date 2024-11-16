@@ -91,7 +91,6 @@ export class HomePage implements OnInit {
       console.error('Error al cargar el monto inicial:', error);
     }
   }
-
   private async showInitialAmountPrompt() {
     const alert = await this.alertController.create({
       header: 'Configura tu Monto Inicial',
@@ -153,6 +152,9 @@ export class HomePage implements OnInit {
   // Navegar a la vista de gastos
   goToGastos() {
     this.navigationSessionCase.goToGastos();
+  }
+  goToIngresos(){
+    this.navigationSessionCase.goToIngresos();
   }
   getFormattedInitialAmount(): string {
     return this.initialAmount.toLocaleString('es-CL', { minimumFractionDigits: 0 });

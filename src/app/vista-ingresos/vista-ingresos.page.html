@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>Detalles de Ingresos</ion-title>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content class="ion-padding fondo-ingresos">
+    <!-- Lista de ingresos -->
+    <ion-list>
+      <ion-item *ngFor="let ingreso of ingresos" lines="none">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ ingreso.categoria }}</ion-card-title>
+            <ion-card-subtitle>{{ ingreso.fecha }}</ion-card-subtitle>
+          </ion-card-header>
+  
+          <ion-card-content>
+            <div class="ingreso-details">
+              <ion-icon name="cash-outline" class="ingreso-icon" slot="start"></ion-icon>
+              <p class="ingreso-amount">Cantidad: <strong>${{ ingreso.Monto_Ingresado }}</strong></p>
+            </div>
+            <p>Comentario: {{ ingreso.comentario || 'Sin comentario' }}</p>
+  
+            <!-- Mostrar la ubicación aquí -->
+            <p><strong>Descripción de ubicación:</strong> {{ ingreso.Comentario_ubicacion || 'Sin ubicación' }}</p>
+  
+            <!-- Botones de eliminar y editar -->
+            <div class="button-container">
+              <ion-button color="danger" fill="solid" size="small" (click)="eliminarIngreso(ingreso.id)">
+                Eliminar
+              </ion-button>
+              <ion-button color="primary" fill="solid" size="small" (click)="editarIngreso(ingreso.id)">
+                Editar
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+    </ion-list>
+  
+    <!-- Mensaje cuando no hay ingresos -->
+    <div *ngIf="ingresos.length === 0" class="no-ingresos">
+      <ion-icon name="alert-circle" size="large"></ion-icon>
+      <p>No hay ingresos registrados.</p>
+    </div>
+  </ion-content>
+  

@@ -54,4 +54,23 @@ export class ExpenseManagementCase {
 
     return this.db.list(`usuarios/${userId}/gastos`).push(expenseData);
   }
+
+  // Método para agregar un ingreso
+  async addIncome(incomeData: any) {
+    const user = await this.afAuth.currentUser;
+    const userId = user?.uid;
+
+    if (!userId) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'No estás autenticado. Por favor, inicia sesión.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+      return;
+    }
+
+    // Guardar el ingreso en la base de datos bajo la ruta "ingresos"
+    return this.db.list(`usuarios/${userId}/ingresos`).push(incomeData);
+  }
 }

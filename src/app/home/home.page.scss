@@ -146,3 +146,29 @@
   margin-top: 40px;
   color: rgb(255, 255, 255);
 }
+/* Estilos para la sección de "Ingresos" (igual a "Gastos") */
+#expenses-container-2 {
+  flex: 1; /* Igual que en los gastos, que ocupe el mismo espacio */
+  margin: 0 10px; /* Espaciado lateral */
+  border: 1px solid #ccc; /* Borde alrededor */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 10px; /* Espaciado interno */
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con algo de transparencia */
+}
+
+.expense-title {
+  font-size: 1.5rem; /* Tamaño del título igual al de "Gastos" */
+  margin-bottom: 10px; /* Espaciado inferior */
+  text-align: center; /* Centrar el texto */
+  color: #333; /* Color del texto */
+}
+
+.expense-box {
+  width: 100%; /* Ancho completo */
+  padding: 15px; /* Espaciado interno */
+  margin: 5px 0; /* Espaciado entre elementos */
+  border: 1px solid #007bff; /* Borde azul */
+  border-radius: 5px; /* Bordes redondeados */
+  background-color: #f8f9fa; /* Fondo claro */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}

@@ -57,14 +57,49 @@ export class VistaGastosPage implements OnInit {
   }
 
   eliminarGasto(id: string) {
-    this.db.list(`usuarios/${this.userId}/gastos`).remove(id).then(() => {
-      this.gastos = this.gastos.filter(gasto => gasto.id !== id);
-      console.log(`Gasto con ID ${id} eliminado.`);
-    }).catch(error => {
-      console.error('Error al eliminar el gasto:', error);
-    });
+    const gastoEliminar = this.gastos.find(gasto => gasto.id === id);
+  
+    if (gastoEliminar) {
+      const montoGastado = gastoEliminar.monto_gastado;
+  
+      // Elimina el gasto de Firebase
+      this.db.list(`usuarios/${this.userId}/gastos`).remove(id).then(() => {
+        // Actualiza el monto inicial en Firebase
+        this.db.object(`usuarios/${this.userId}/monto_inicial`).query.once('value', (snapshot) => {
+          const montoInicial = snapshot.val() || 0;
+          const nuevoMontoInicial = montoInicial + montoGastado;
+  
+          // Actualiza el monto inicial en Firebase
+          this.db.object(`usuarios/${this.userId}/monto_inicial`).set(nuevoMontoInicial).then(() => {
+            console.log(`Monto inicial actualizado a: ${nuevoMontoInicial}`);
+  
+            // Actualiza el monto inicial también en localStorage
+            this.updateInitialAmountInHome(nuevoMontoInicial);
+          }).catch(error => {
+            console.error('Error al actualizar el monto inicial:', error);
+          });
+        }).catch(error => {
+          console.error('Error al obtener el monto inicial:', error);
+        });
+  
+        // Elimina el gasto de la lista en la vista
+        this.gastos = this.gastos.filter(gasto => gasto.id !== id);
+        console.log(`Gasto con ID ${id} eliminado y monto inicial actualizado.`);
+      }).catch(error => {
+        console.error('Error al eliminar el gasto:', error);
+      });
+    } else {
+      console.error('No se encontró el gasto con el ID proporcionado');
+    }
   }
-
+  
+  // Modificado para aceptar el nuevo monto inicial como parámetro
+  private updateInitialAmountInHome(nuevoMontoInicial: number) {
+    // Actualiza el monto inicial en localStorage
+    localStorage.setItem('initialAmount', nuevoMontoInicial.toString());
+    console.log(`Monto inicial actualizado en localStorage: ${nuevoMontoInicial}`);
+  }
+  
   editarGasto(id: string) {
     // Redirige a una página de edición de gastos con el ID del gasto
     this.router.navigate(['/gastos.page.html', id]);
