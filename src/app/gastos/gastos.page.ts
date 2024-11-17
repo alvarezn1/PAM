@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { ExpenseManagementCase } from '../use-cases/expense-management.use-case';
 import { ErrorAlertCase } from '../use-cases/error-alert.use-case';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-gastos',
@@ -23,8 +21,7 @@ export class GastosPage implements OnInit {
     private expenseManagementCase: ExpenseManagementCase,
     private router: Router,
     private errorAlertCase: ErrorAlertCase,
-    private afAuth: AngularFireAuth,
-    private db: AngularFireDatabase
+    private afAuth: AngularFireAuth
   ) {
     this.foto = null;
   }
@@ -44,32 +41,17 @@ export class GastosPage implements OnInit {
     };
 
     try {
-      // Obtener el monto inicial actual del usuario
-      const user = await this.afAuth.user.pipe(first()).toPromise();
-      if (user) {
-        const snapshot = await this.db.database.ref(`usuarios/${user.uid}/montoInicial`).once('value');
-        let montoInicial = snapshot.val() || 0;
-
-        // Restar el monto gastado del monto inicial
-        montoInicial -= this.Monto_Gastado;
-
-        // Actualizar el monto inicial en la base de datos y en localStorage
-        await this.db.database.ref(`usuarios/${user.uid}/montoInicial`).set(montoInicial);
-        localStorage.setItem('initialAmount', montoInicial.toString());
-        
-        // Llamar a la función de gestión de gastos
-        await this.expenseManagementCase.addExpense(expenseData);
-        await this.errorAlertCase.showErrorAlert('Gasto añadido con éxito','Exito');
-        this.resetForm();
-        this.router.navigate(['/home']);
-      } else {
-        await this.errorAlertCase.showErrorAlert('Usuario no autenticado.');
-      }
+      // Llamar a la función de gestión de gastos
+      await this.expenseManagementCase.addExpense(expenseData);
+      await this.errorAlertCase.showErrorAlert('Gasto añadido con éxito', 'Exito');
+      this.resetForm();
+      this.router.navigate(['/home']);
     } catch (error) {
       console.error('Error al añadir el gasto:', error);
       await this.errorAlertCase.showErrorAlert('Error al añadir el gasto. Inténtalo de nuevo más tarde.');
     }
   }
+
   resetForm() {
     this.Monto_Gastado = 0;
     this.categoria = '';
@@ -96,5 +78,4 @@ export class GastosPage implements OnInit {
     // Verificar que la fecha sea válida
     return !isNaN(new Date(date).getTime());
   }
-  
 }

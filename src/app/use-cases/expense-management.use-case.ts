@@ -15,28 +15,6 @@ export class ExpenseManagementCase {
     private router: Router
   ) {}
 
-  // Método para mostrar el diálogo de adición de gasto o ingreso
-  async showAddDialog() {
-    const alert = await this.alertController.create({
-      header: 'Añadir',
-      buttons: [
-        {
-          text: 'Gasto',
-          handler: () => this.router.navigate(['/gastos']),
-        },
-        {
-          text: 'Ingreso',
-          handler: () => this.router.navigate(['/ingresos']),
-        },
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        }
-      ]
-    });
-    await alert.present();
-  }
-
   // Método para agregar un gasto
   async addExpense(expenseData: any) {
     const user = await this.afAuth.currentUser;
@@ -52,6 +30,17 @@ export class ExpenseManagementCase {
       return;
     }
 
+    // Obtener el monto inicial y restar el monto gastado
+    const snapshot = await this.db.database.ref(`usuarios/${userId}/montoInicial`).once('value');
+    let montoInicial = snapshot.val() || 0;
+
+    montoInicial -= expenseData.Monto_Gastado;
+
+    // Actualizar el monto inicial en la base de datos y en localStorage
+    await this.db.database.ref(`usuarios/${userId}/montoInicial`).set(montoInicial);
+    localStorage.setItem('initialAmount', montoInicial.toString());
+
+    // Guardar el gasto en la base de datos
     return this.db.list(`usuarios/${userId}/gastos`).push(expenseData);
   }
 
@@ -72,5 +61,27 @@ export class ExpenseManagementCase {
 
     // Guardar el ingreso en la base de datos bajo la ruta "ingresos"
     return this.db.list(`usuarios/${userId}/ingresos`).push(incomeData);
+  }
+
+  // Método para mostrar el diálogo de adición de gasto o ingreso
+  async showAddDialog() {
+    const alert = await this.alertController.create({
+      header: 'Añadir',
+      buttons: [
+        {
+          text: 'Gasto',
+          handler: () => this.router.navigate(['/gastos']),
+        },
+        {
+          text: 'Ingreso',
+          handler: () => this.router.navigate(['/ingresos']),
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        }
+      ]
+    });
+    await alert.present();
   }
 }
