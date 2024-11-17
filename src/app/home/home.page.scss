@@ -146,29 +146,30 @@
   margin-top: 40px;
   color: rgb(255, 255, 255);
 }
-/* Estilos para la sección de "Ingresos" (igual a "Gastos") */
+/* Asegurar que los contenedores de "Gastos" e "Ingresos" se alineen correctamente */
+.expenses-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* Permitir que los contenedores se ajusten al ancho disponible */
+}
+
+#expenses-container,
 #expenses-container-2 {
-  flex: 1; /* Igual que en los gastos, que ocupe el mismo espacio */
-  margin: 0 10px; /* Espaciado lateral */
-  border: 1px solid #ccc; /* Borde alrededor */
-  border-radius: 8px; /* Bordes redondeados */
-  padding: 10px; /* Espaciado interno */
-  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con algo de transparencia */
+  flex: 1;
+  margin: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 100%; /* Asegura que los contenedores no sobrepasen el espacio disponible */
+  max-width: 45%; /* Ajusta el ancho máximo al 45% para evitar que se desborden */
 }
 
-.expense-title {
-  font-size: 1.5rem; /* Tamaño del título igual al de "Gastos" */
-  margin-bottom: 10px; /* Espaciado inferior */
-  text-align: center; /* Centrar el texto */
-  color: #333; /* Color del texto */
-}
-
-.expense-box {
-  width: 100%; /* Ancho completo */
-  padding: 15px; /* Espaciado interno */
-  margin: 5px 0; /* Espaciado entre elementos */
-  border: 1px solid #007bff; /* Borde azul */
-  border-radius: 5px; /* Bordes redondeados */
-  background-color: #f8f9fa; /* Fondo claro */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+/* Para pantallas más pequeñas, hacer que los contenedores tomen el 100% del ancho */
+@media (max-width: 768px) {
+  #expenses-container,
+  #expenses-container-2 {
+    max-width: 100%; /* En pantallas pequeñas, que ocupen todo el ancho disponible */
+  }
 }

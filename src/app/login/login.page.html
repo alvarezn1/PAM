@@ -12,6 +12,11 @@
       <ion-input placeholder="Contraseña" [(ngModel)]="password" type="password"></ion-input>
     </ion-item>
 
+    <!-- Mensaje de error -->
+    <div *ngIf="loginError" class="error-message">
+      <p>Correo electrónico o contraseña incorrectos.</p>
+    </div>
+
     <ion-button expand="full" color="primary" class="login-button" (click)="onLoginButtonPressed()">Iniciar sesión</ion-button>
 
     <div class="divider"></div>

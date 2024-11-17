@@ -10,7 +10,7 @@ import { NavigationSessionCase } from '../use-cases/navigation-session.use-case'
 export class LoginPage implements OnInit {
   email: string = '';
   password: string = '';
-
+  loginError: boolean = false;
   constructor(
     private navigationSessionCase: NavigationSessionCase,  // Inyectamos el servicio
     private router: Router
@@ -19,7 +19,13 @@ export class LoginPage implements OnInit {
   ngOnInit() {}
 
   async onLoginButtonPressed() {
-    await this.navigationSessionCase.login(this.email, this.password);  // Llamamos al método login del servicio
+    try {
+      await this.navigationSessionCase.login(this.email, this.password);
+      this.loginError = false; // Si el login es exitoso, ocultamos el mensaje de error
+    } catch (error) {
+      this.loginError = true; // Si hay error, mostramos el mensaje de error
+      console.error('Error en el login:', error);
+    }
   }
 
   onRegisterButtonPressed() {

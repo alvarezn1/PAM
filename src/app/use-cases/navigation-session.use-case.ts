@@ -54,6 +54,7 @@ export class NavigationSessionCase {
       this.router.navigate(['/splash']);
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
+      throw new Error('Credenciales incorrectas');
     }
   }
 
