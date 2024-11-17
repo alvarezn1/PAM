@@ -12,6 +12,7 @@ import { NavigationSessionCase } from '../use-cases/navigation-session.use-case'
 import { ExpenseManagementCase } from '../use-cases/expense-management.use-case';
 import { ExternalDataCase } from '../use-cases/external-data.use-case';
 import { ErrorAlertCase } from '../use-cases/error-alert.use-case';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -24,7 +25,11 @@ export class HomePage implements OnInit {
   initialAmount: number = 0;
   user: any;
   montoGastado: number = 0;
+  userId: string = ''; // UID del usuario actual
+  montoInicial: number = 0;
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private db: AngularFireDatabase,
     private afAuth: AngularFireAuth,
     private exchangeRateService: ExchangeRateService,
@@ -36,34 +41,36 @@ export class HomePage implements OnInit {
     private alertController: AlertController,
     private expenseManagementCase: ExpenseManagementCase,
     private externalDataCase: ExternalDataCase,
-    private errorAlertCase: ErrorAlertCase,
-
+    private errorAlertCase: ErrorAlertCase
   ) {}
 
   ngOnInit() {
-    this.montoGastado = this.getMontoGastadoFromLocalStorage(); // Recupera el monto desde localStorage
+    this.montoGastado = this.getMontoGastadoFromLocalStorage();
     this.loadExchangeRates();
     this.loadData();
     this.loadInitialAmount();
+    this.listenToInitialAmount();
   }
 
+  // Carga las tasas de cambio
   loadExchangeRates() {
     this.externalDataCase.getExchangeRates('USD').subscribe(
-      data => {
+      (data) => {
         this.rates = data;
         console.log(this.rates);
       },
-      error => {
+      (error) => {
         console.error('Error fetching exchange rates', error);
         this.errorAlertCase.showErrorAlert('Error al obtener las tasas de cambio.');
       }
     );
   }
 
+  // Carga datos del usuario
   async loadData() {
     try {
       this.user = await this.storageService.get('user');
-      if (this.user && this.user.email) {
+      if (this.user?.email) {
         this.email = this.user.email;
         console.log(`Correo electrónico cargado: ${this.email}`);
       } else {
@@ -74,6 +81,21 @@ export class HomePage implements OnInit {
     }
   }
 
+  // Escucha cambios en el monto inicial desde Firebase
+  listenToInitialAmount() {
+    this.db
+      .object(`users/${this.userId}/montoInicial`)
+      .valueChanges()
+      .subscribe((montoInicial: any) => {
+        if (montoInicial !== null && typeof montoInicial === 'number') {
+          this.montoInicial = montoInicial;
+        } else {
+          console.warn('El monto inicial no es válido:', montoInicial);
+        }
+      });
+  }
+
+  // Carga el monto inicial del usuario
   async loadInitialAmount() {
     try {
       const user = await this.afAuth.user.pipe(first()).toPromise();
@@ -91,6 +113,9 @@ export class HomePage implements OnInit {
       console.error('Error al cargar el monto inicial:', error);
     }
   }
+  
+  
+
   private async showInitialAmountPrompt() {
     const alert = await this.alertController.create({
       header: 'Configura tu Monto Inicial',
@@ -124,10 +149,10 @@ export class HomePage implements OnInit {
     await alert.present();
   }
 
+  // Muestra el cuadro de diálogo para agregar un gasto
   async showAddDialog() {
     await this.expenseManagementCase.showAddDialog();
   }
-
 
   async onSignOutButtonPressed() {
     this.cancelAlertService.showAlert(
@@ -143,23 +168,26 @@ export class HomePage implements OnInit {
   }
 
   showMore() {
-    this.visibleRates += 5; 
+    this.visibleRates += 5;
   }
 
   async resetInitialAmount() {
     await this.initialAmountCase.resetInitialAmount();
   }
-  // Navegar a la vista de gastos
+
   goToGastos() {
     this.navigationSessionCase.goToGastos();
   }
-  goToIngresos(){
+
+  goToIngresos() {
     this.navigationSessionCase.goToIngresos();
   }
+
   getFormattedInitialAmount(): string {
+    console.log('Monto actual en getFormattedInitialAmount:', this.initialAmount);  // Verifica el valor actual
     return this.initialAmount.toLocaleString('es-CL', { minimumFractionDigits: 0 });
   }
-
+  
   private async showErrorAlert(message: string) {
     const errorAlert = await this.alertController.create({
       header: 'Error',
@@ -168,10 +196,9 @@ export class HomePage implements OnInit {
     });
     await errorAlert.present();
   }
-  //resta el gasto al monto inicial
+
   getMontoGastadoFromLocalStorage(): number {
     const monto = localStorage.getItem('montoGastado');
-    return monto ? parseFloat(monto) : 0; // Si no existe, retorna 0
+    return monto ? parseFloat(monto) : 0;
   }
-  
-  }
+}
