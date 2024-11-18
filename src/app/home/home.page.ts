@@ -45,7 +45,6 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.montoGastado = this.getMontoGastadoFromLocalStorage();
     this.loadExchangeRates();
     this.loadData();
     this.loadInitialAmount();
@@ -84,16 +83,18 @@ export class HomePage implements OnInit {
   // Escucha cambios en el monto inicial desde Firebase
   listenToInitialAmount() {
     this.db
-      .object(`users/${this.userId}/montoInicial`)
-      .valueChanges()
-      .subscribe((montoInicial: any) => {
-        if (montoInicial !== null && typeof montoInicial === 'number') {
-          this.montoInicial = montoInicial;
-        } else {
-          console.warn('El monto inicial no es válido:', montoInicial);
-        }
-      });
+    .object(`users/${this.userId}/monto_inicial`)
+    .valueChanges()
+    .subscribe((montoInicial: any) => {
+      console.log('Monto inicial actualizado:', montoInicial);
+      if (typeof montoInicial === 'number') {
+        this.montoInicial = montoInicial;
+      } else {
+        console.warn('El montoInicial no es un número válido o no está definido:', montoInicial);
+      }
+    });
   }
+  
 
   // Carga el monto inicial del usuario
   async loadInitialAmount() {
@@ -195,10 +196,5 @@ export class HomePage implements OnInit {
       buttons: ['OK'],
     });
     await errorAlert.present();
-  }
-
-  getMontoGastadoFromLocalStorage(): number {
-    const monto = localStorage.getItem('montoGastado');
-    return monto ? parseFloat(monto) : 0;
   }
 }

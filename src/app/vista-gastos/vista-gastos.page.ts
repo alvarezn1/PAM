@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { Router } from '@angular/router'; // Importa Router para la navegación
+import { Router } from '@angular/router';
 import { SessionManager } from 'src/managers/SessionManager';
+import { take } from 'rxjs/operators'; // Importa take para limitar la suscripción a una sola vez
 
 @Component({
   selector: 'app-vista-gastos',
@@ -12,17 +13,21 @@ export class VistaGastosPage implements OnInit {
   gastos: any[] = [];
   userId: string | null = null;
 
-  constructor(private db: AngularFireDatabase, private sessionManager: SessionManager, private router: Router) {}
+  constructor(
+    private db: AngularFireDatabase,
+    private sessionManager: SessionManager,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     try {
+      // Obtén el ID del usuario desde el SessionManager
       this.userId = await this.sessionManager.getCurrentUserId();
-      console.log('User ID en VistaGastos:', this.userId);
 
       if (this.userId) {
         this.getGastos();
       } else {
-        console.error('No se pudo obtener el ID del usuario, asegúrate de que el usuario esté autenticado.');
+        console.error('No se pudo obtener el ID del usuario. Asegúrate de que el usuario esté autenticado.');
       }
     } catch (error) {
       console.error('Error al obtener el ID del usuario:', error);
@@ -35,73 +40,74 @@ export class VistaGastosPage implements OnInit {
       return;
     }
 
-    this.db.list(`usuarios/${this.userId}/gastos`).snapshotChanges().subscribe(
-      actions => {
-        this.gastos = actions.map(action => {
-          const data = action.payload.val();
-          const id = action.key;
-
-          if (data) {
-            return { id, ...data };
-          } else {
-            console.warn(`No se encontraron datos para el ID: ${id}`);
-            return null;
-          }
-        }).filter(item => item !== null);
-        console.log('Gastos recuperados:', this.gastos);
-      },
-      error => {
-        console.error('Error al recuperar los gastos:', error);
-      }
-    );
+    // Recuperar gastos del usuario desde Firebase
+    this.db
+      .list(`usuarios/${this.userId}/gastos`)
+      .snapshotChanges()
+      .subscribe(
+        (actions) => {
+          this.gastos = actions
+            .map((action) => {
+              const data = action.payload.val();
+              const id = action.key;
+              return data ? { id, ...data } : null;
+            })
+            .filter((item) => item !== null);
+        },
+        (error) => {
+          console.error('Error al recuperar los gastos:', error);
+        }
+      );
   }
 
   eliminarGasto(id: string) {
-    const gastoEliminar = this.gastos.find(gasto => gasto.id === id);
-  
+    if (!this.userId) {
+      console.error('No se puede eliminar el gasto, ID de usuario no disponible.');
+      return;
+    }
+
+    const gastoEliminar = this.gastos.find((gasto) => gasto.id === id);
+
     if (gastoEliminar) {
-      const montoGastado = gastoEliminar.monto_gastado;
-  
-      // Elimina el gasto de Firebase
-      this.db.list(`usuarios/${this.userId}/gastos`).remove(id).then(() => {
-        // Actualiza el monto inicial en Firebase
-        this.db.object(`usuarios/${this.userId}/monto_inicial`).query.once('value', (snapshot) => {
-          const montoInicial = snapshot.val() || 0;
-          const nuevoMontoInicial = montoInicial + montoGastado;
-  
-          // Actualiza el monto inicial en Firebase
-          this.db.object(`usuarios/${this.userId}/monto_inicial`).set(nuevoMontoInicial).then(() => {
-            console.log(`Monto inicial actualizado a: ${nuevoMontoInicial}`);
-  
-            // Actualiza el monto inicial también en localStorage
-            this.updateInitialAmountInHome(nuevoMontoInicial);
-          }).catch(error => {
-            console.error('Error al actualizar el monto inicial:', error);
-          });
-        }).catch(error => {
-          console.error('Error al obtener el monto inicial:', error);
+      const montoGasto = gastoEliminar.Monto_Gastado;
+
+      // Eliminar gasto de Firebase
+      this.db
+        .list(`usuarios/${this.userId}/gastos`)
+        .remove(id)
+        .then(() => {
+          console.log(`Gasto con ID ${id} eliminado.`);
+          this.gastos = this.gastos.filter((gasto) => gasto.id !== id);
+
+          // Actualizar el montoInicial del usuario de forma eficiente
+          this.db
+            .object(`usuarios/${this.userId}/montoInicial`)
+            .valueChanges()
+            .pipe(take(1)) // Limitar a una sola emisión de los datos
+            .subscribe((montoInicial: any) => {
+              if (typeof montoInicial === 'number') {
+                const nuevoMontoInicial = montoInicial + montoGasto;
+
+                // Actualizar el monto inicial en Firebase
+                this.db
+                  .object(`usuarios/${this.userId}`)
+                  .update({ montoInicial: nuevoMontoInicial })
+                  .catch((error) => console.error('Error al actualizar el monto inicial:', error));
+              } else {
+                console.warn('El montoInicial no es un número válido o no está definido:', montoInicial);
+              }
+            });
+        })
+        .catch((error) => {
+          console.error('Error al eliminar el gasto:', error);
         });
-  
-        // Elimina el gasto de la lista en la vista
-        this.gastos = this.gastos.filter(gasto => gasto.id !== id);
-        console.log(`Gasto con ID ${id} eliminado y monto inicial actualizado.`);
-      }).catch(error => {
-        console.error('Error al eliminar el gasto:', error);
-      });
     } else {
-      console.error('No se encontró el gasto con el ID proporcionado');
+      console.error('No se encontró el gasto con el ID proporcionado.');
     }
   }
-  
-  // Modificado para aceptar el nuevo monto inicial como parámetro
-  private updateInitialAmountInHome(nuevoMontoInicial: number) {
-    // Actualiza el monto inicial en localStorage
-    localStorage.setItem('initialAmount', nuevoMontoInicial.toString());
-    console.log(`Monto inicial actualizado en localStorage: ${nuevoMontoInicial}`);
-  }
-  
+
   editarGasto(id: string) {
-    // Redirige a una página de edición de gastos con el ID del gasto
-    this.router.navigate(['/gastos.page.html', id]);
+    // Redirige al formulario de edición del gasto
+    this.router.navigate(['/gastos.page.html', id]); // Cambia la ruta si es necesario
   }
 }
