@@ -26,7 +26,20 @@
   
             <!-- Mostrar la ubicación aquí -->
             <p><strong>Descripción de ubicación:</strong> {{ ingreso.Comentario_ubicacion || 'Sin ubicación' }}</p>
-  
+             
+            <!-- Mostrar geolocalización solo si está disponible -->
+          <div *ngIf="ingreso.geolocation" class="gasto-geolocalizacion">
+            <p>
+              <strong>Geolocalización:</strong>
+              <a 
+                [href]="'https://www.google.com/maps?q=' + ingreso.geolocation" 
+                target="_blank" 
+                rel="noopener noreferrer">
+                {{ ingreso.geolocation }}
+              </a>
+            </p>
+          </div>
+
             <!-- Botones de eliminar y editar -->
             <div class="button-container">
               <ion-button color="danger" fill="solid" size="small" (click)="eliminarIngreso(ingreso.id)">

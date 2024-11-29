@@ -5,6 +5,9 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { first } from 'rxjs/operators';
 import { ExpenseManagementCase } from '../use-cases/expense-management.use-case';
+import { GeolocationService } from '../../managers/geolocation-service'; // Ajusta la ruta según la ubicación del servicio
+import { ImageService } from '../../managers/image-service';
+
 @Component({
   selector: 'app-ingresos', // Cambié el selector de 'gastos' a 'ingresos'
   templateUrl: './ingresos.page.html', // Cambié la ruta de la plantilla a ingresos.page.html
@@ -16,30 +19,58 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
   fecha: string = '';
   comentario: string = '';
   Comentario_ubicacion: string = ''; // Aquí sigue siendo la propiedad de ubicación
-  foto: File | null;
+  geolocalizacion: string = ''; // Variable para mostrar la dirección o coordenadas
+  latitud: number | null = null; // Latitud para almacenar
+  longitud: number | null = null; // Longitud para almacenar
+  isLoading: boolean = false; // Estado de carga para geolocalización
+  imageUrl: string | undefined;  // Aquí guardamos la URL de la imagen seleccionada
 
   constructor(
     private expenseManagementCase: ExpenseManagementCase,
     private router: Router,
     private errorAlertCase: ErrorAlertCase,
     private afAuth: AngularFireAuth,
-    private db: AngularFireDatabase
+    private db: AngularFireDatabase,
+    private geolocationService: GeolocationService,
+    private imageService: ImageService
   ) {
-    this.foto = null;
   }
 
   ngOnInit() {
     // Lógica al inicializar el componente
   }
+   // Método para seleccionar foto
+ async selectPhoto() {
+  const result = await this.imageService.getImageFromCamera(); // Llama a tu servicio para obtener la imagen
+  if (result.success) {
+    this.imageUrl = result.imageUrl;  // URL de la imagen seleccionada
+    
+    // Si deseas hacer algo con la imagen, como convertirla a Base64, ya lo has hecho en el servicio.
+    console.log('Imagen seleccionada:', this.imageUrl);
+
+    // Asegúrate de que la imagen se sube correctamente al servidor o se guarda donde corresponda.
+    // La imagen está almacenada en imageUrl, puedes guardarla con otros datos de gasto si es necesario.
+  } else {
+    console.error(result.message); // Maneja el error si no se pudo obtener la imagen
+  }
+}
+  async addIncome() {
+    if (!this.latitud || !this.longitud) {
+      await this.errorAlertCase.showErrorAlert('Debes obtener la geolocalización antes de enviar el formulario.', 'Error');
+      return; // No permite añadir el gasto sin geolocalización
+    }
+  // Combina latitud y longitud en una cadena con el formato "latitud,longitud"
+    const geolocationString = `${this.latitud}, ${this.longitud}`;
 
   // Función para añadir un ingreso y actualizar el monto inicial
-  async addIncome() { // Cambié el nombre de la función a addIncome
     const incomeData = {
       Monto_Ingresado: this.Monto_Ingresado, // Cambié Monto_Gastado a Monto_Ingresado
       categoria: this.categoria,
       fecha: this.fecha,
       comentario: this.comentario,
       Comentario_ubicacion: this.Comentario_ubicacion,
+      geolocation: geolocationString,// Guarda la geolocalización como cadena
+      imageUrl: this.imageUrl, // Agrega la URL de la imagen
     };
 
     try {
@@ -75,13 +106,31 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
     this.categoria = '';
     this.fecha = '';
     this.comentario = '';
-    this.foto = null;
+    this.geolocalizacion = '';
+    this.latitud = null;
+    this.longitud = null;
+    this.imageUrl ='';
   }
 
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    this.foto = file;
+  async getGeolocation() {
+    try {
+      this.isLoading = true;
+      const { latitude, longitude } = await this.geolocationService.getCurrentLocation();
+      this.geolocalizacion = `Lat: ${latitude}, Lon: ${longitude}`; // Aquí puedes modificar la forma en que se muestra la geolocalización
+  
+      // Asigna la latitud y longitud a las variables
+      this.latitud = latitude;
+      this.longitud = longitude;
+  
+    } catch (error) {
+      console.error(error);
+      this.geolocalizacion = 'No se pudo obtener la ubicación.';
+      this.Comentario_ubicacion = 'No disponible'; // Valor por defecto si falla la geolocalización
+    } finally {
+      this.isLoading = false;
+    }
   }
+  
 
   goHome() {
     this.router.navigate(['/home']);
@@ -89,7 +138,17 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
 
   formValid() {
     // Validar si todos los campos son válidos
-    return this.Monto_Ingresado > 0 && this.categoria.match(/^[A-Za-z]+$/) && this.fecha && this.isValidDate(this.fecha) && this.Comentario_ubicacion.trim() !== '';
+    return (
+    this.Monto_Ingresado > 0 &&
+     this.categoria.match(/^[A-Za-z]+$/) && 
+     this.fecha && this.isValidDate(this.fecha) && 
+     this.isValidDate(this.fecha) &&
+     this.Comentario_ubicacion.trim() !== '' &&
+     this.comentario.trim() !== '' && // Validación de comentario
+     this.latitud && // Validación de la latitud
+     this.longitud &&
+     this.categoria.match(/^[A-Za-z\s]+$/) 
+   );
   }
 
   isValidDate(date: string): boolean {

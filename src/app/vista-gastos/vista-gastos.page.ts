@@ -59,18 +59,17 @@ export class VistaGastosPage implements OnInit {
         }
       );
   }
-
   eliminarGasto(id: string) {
     if (!this.userId) {
       console.error('No se puede eliminar el gasto, ID de usuario no disponible.');
       return;
     }
-
+  
     const gastoEliminar = this.gastos.find((gasto) => gasto.id === id);
-
+  
     if (gastoEliminar) {
       const montoGasto = gastoEliminar.Monto_Gastado;
-
+  
       // Eliminar gasto de Firebase
       this.db
         .list(`usuarios/${this.userId}/gastos`)
@@ -78,7 +77,15 @@ export class VistaGastosPage implements OnInit {
         .then(() => {
           console.log(`Gasto con ID ${id} eliminado.`);
           this.gastos = this.gastos.filter((gasto) => gasto.id !== id);
-
+          this.db
+            .object(`usuarios/${this.userId}/gastos/${id}`)
+            .update({
+              latitud: null,
+              longitud: null,
+              Comentario_ubicacion: null, // Puedes eliminar o vaciar la descripción de la ubicación también
+            })
+            .catch((error) => console.error('Error al eliminar geolocalización:', error));
+  
           // Actualizar el montoInicial del usuario de forma eficiente
           this.db
             .object(`usuarios/${this.userId}/montoInicial`)
@@ -87,7 +94,7 @@ export class VistaGastosPage implements OnInit {
             .subscribe((montoInicial: any) => {
               if (typeof montoInicial === 'number') {
                 const nuevoMontoInicial = montoInicial + montoGasto;
-
+  
                 // Actualizar el monto inicial en Firebase
                 this.db
                   .object(`usuarios/${this.userId}`)
@@ -105,6 +112,7 @@ export class VistaGastosPage implements OnInit {
       console.error('No se encontró el gasto con el ID proporcionado.');
     }
   }
+  
 
   editarGasto(id: string) {
     // Redirige al formulario de edición del gasto

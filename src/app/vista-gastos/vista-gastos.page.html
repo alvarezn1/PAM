@@ -19,13 +19,33 @@
         <ion-card-content>
           <div class="gasto-details">
             <ion-icon name="cash-outline" class="gasto-icon" slot="start"></ion-icon>
-            <p class="gasto-amount">Cantidad: <strong>${{ gasto.Monto_Gastado }}</strong></p>
+            <p class="gasto-amount">Cantidad: <strong>${{ gasto.Monto_Gastado | number }}</strong></p>
           </div>
-          <p>Comentario: {{ gasto.comentario }}</p>
-          
-          <!-- Mostrar la ubicación aquí -->
-          <p><strong>Descripcion de ubicacion:</strong> {{ gasto.Comentario_ubicacion }}</p>
 
+          <p><strong>Comentario:</strong> {{ gasto.comentario }}</p>
+
+          <!-- Mostrar la ubicación si está disponible -->
+          <div *ngIf="gasto.Comentario_ubicacion" class="gasto-ubicacion">
+            <p><strong>Descripción de la ubicación:</strong> {{ gasto.Comentario_ubicacion }}</p>
+          </div>
+
+          <!-- Mostrar geolocalización solo si está disponible -->
+          <div *ngIf="gasto.geolocation" class="gasto-geolocalizacion">
+            <p>
+              <strong>Geolocalización:</strong>
+              <a 
+                [href]="'https://www.google.com/maps?q=' + gasto.geolocation" 
+                target="_blank" 
+                rel="noopener noreferrer">
+                {{ gasto.geolocation }}
+              </a>
+            </p>
+          </div>
+          <!-- Mostrar la imagen si está disponible -->
+          <div *ngIf="gasto.imageUrl" class="gasto-image">
+            <img [src]="gasto.imageUrl" alt="Imagen del gasto" class="gasto-img"/>
+          </div>
+          <!-- Botón de eliminar -->
           <div class="button-container">
             <ion-button color="danger" fill="solid" size="small" (click)="eliminarGasto(gasto.id)">
               Eliminar
@@ -36,6 +56,7 @@
     </ion-item>
   </ion-list>
 
+  <!-- Mensaje cuando no hay gastos registrados -->
   <div *ngIf="gastos.length === 0" class="no-gastos">
     <ion-icon name="alert-circle" size="large"></ion-icon>
     <p>No hay gastos registrados.</p>

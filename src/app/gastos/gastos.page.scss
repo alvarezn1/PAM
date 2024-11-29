@@ -1,4 +1,4 @@
-.square-container, .location-container,.input-container, .category-container, .date-container, .comment-container, .photo-container {
+.square-container, .location-container,.location-description-container,.geolocation-container,.input-container, .category-container, .date-container, .comment-container, .photo-container {
     background-color: #948c8c; /* Color de fondo claro */
     border-radius: 10px; /* Bordes redondeados */
     padding: 15px; /* Espaciado interno */
@@ -18,4 +18,8 @@
     font-size: 12px;
     margin-top: 5px;
   }
-  
+  .photo-container img {
+    margin-top: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
