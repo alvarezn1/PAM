@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 import { ExpenseManagementCase } from '../use-cases/expense-management.use-case';
 import { GeolocationService } from '../../managers/geolocation-service'; // Ajusta la ruta según la ubicación del servicio
 import { ImageService } from '../../managers/image-service';
-
+import { ActionSheetController } from '@ionic/angular';
 @Component({
   selector: 'app-ingresos', // Cambié el selector de 'gastos' a 'ingresos'
   templateUrl: './ingresos.page.html', // Cambié la ruta de la plantilla a ingresos.page.html
@@ -32,12 +32,59 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
     private afAuth: AngularFireAuth,
     private db: AngularFireDatabase,
     private geolocationService: GeolocationService,
-    private imageService: ImageService
+    private imageService: ImageService, 
+    private actionSheetController: ActionSheetController
   ) {
   }
 
   ngOnInit() {
     // Lógica al inicializar el componente
+  }
+  
+  async onProfileImagePressed() {
+    console.log("Abriendo ActionSheet...");
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Selecciona una opción',
+      buttons: [
+        {
+          text: 'Cámara',
+          icon: 'camera',
+          handler: async () => {
+            console.log("Opción cámara seleccionada");
+            const uploadResult = await this.imageService.getImageFromCamera();
+            this.handleImageUploadResult(uploadResult);
+          }
+        },
+        {
+          text: 'Galeria',
+          icon: 'image',
+          handler: async () => {
+            console.log("Opción galería seleccionada");
+            const uploadResult = await this.imageService.getImageFromGallery();
+            this.handleImageUploadResult(uploadResult);
+          },
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => { console.log("Opción cancelar seleccionada"); }
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
+  
+
+  // Maneja el resultado de la carga de la imagen
+  handleImageUploadResult(result: any) {
+    if (result.success) {
+      this.imageUrl = result.imageUrl;  // Aquí se guarda la URL de la imagen seleccionada
+      console.log('Imagen seleccionada:', this.imageUrl);
+    } else {
+      console.error('Error al seleccionar la imagen:', result.message);
+      // Si lo deseas, puedes mostrar un mensaje de error al usuario con un alert
+    }
   }
    // Método para seleccionar foto
  async selectPhoto() {
@@ -135,24 +182,21 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
   goHome() {
     this.router.navigate(['/home']);
   }
-
   formValid() {
     // Validar si todos los campos son válidos
     return (
-    this.Monto_Ingresado > 0 &&
-     this.categoria.match(/^[A-Za-z]+$/) && 
-     this.fecha && this.isValidDate(this.fecha) && 
-     this.isValidDate(this.fecha) &&
-     this.Comentario_ubicacion.trim() !== '' &&
-     this.comentario.trim() !== '' && // Validación de comentario
-     this.latitud && // Validación de la latitud
-     this.longitud &&
-     this.categoria.match(/^[A-Za-z\s]+$/) 
-   );
+      this.Monto_Ingresado > 0 &&
+      this.categoria.match(/^[A-Za-z\s]+$/) &&  // Permitir letras y espacios en categoría
+      this.fecha && this.isValidDate(this.fecha) &&
+      this.Comentario_ubicacion.trim() !== '' &&
+      this.comentario.trim() !== '' && // Validación de comentario
+      this.latitud !== null &&  // Validación explícita de latitud y longitud
+      this.longitud !== null
+    );
   }
-
+  
   isValidDate(date: string): boolean {
     // Verificar que la fecha sea válida
     return !isNaN(new Date(date).getTime());
   }
-}
+}  

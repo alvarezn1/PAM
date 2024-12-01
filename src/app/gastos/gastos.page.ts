@@ -5,6 +5,7 @@ import { ErrorAlertCase } from '../use-cases/error-alert.use-case';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GeolocationService } from '../../managers/geolocation-service'; // Ajusta la ruta según la ubicación del servicio
 import { ImageService } from '../../managers/image-service';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-gastos',
@@ -21,7 +22,7 @@ export class GastosPage implements OnInit {
   latitud: number | null = null; // Latitud para almacenar
   longitud: number | null = null; // Longitud para almacenar
   isLoading: boolean = false; // Estado de carga para geolocalización
-  imageUrl: string | undefined;  // Aquí guardamos la URL de la imagen seleccionada
+  imageUrl: string | undefined = '';  // Aquí guardamos la URL de la imagen seleccionada
 
   constructor(
     private expenseManagementCase: ExpenseManagementCase,
@@ -29,28 +30,61 @@ export class GastosPage implements OnInit {
     private errorAlertCase: ErrorAlertCase,
     private afAuth: AngularFireAuth,
     private geolocationService: GeolocationService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private actionSheetController: ActionSheetController
   ) {}
 
   ngOnInit() {
     // Aquí puedes agregar lógica si es necesario cuando el componente se inicializa
   }
- // Método para seleccionar foto
- async selectPhoto() {
-  const result = await this.imageService.getImageFromCamera(); // Llama a tu servicio para obtener la imagen
-  if (result.success) {
-    this.imageUrl = result.imageUrl;  // URL de la imagen seleccionada
-    
-    // Si deseas hacer algo con la imagen, como convertirla a Base64, ya lo has hecho en el servicio.
-    console.log('Imagen seleccionada:', this.imageUrl);
 
-    // Asegúrate de que la imagen se sube correctamente al servidor o se guarda donde corresponda.
-    // La imagen está almacenada en imageUrl, puedes guardarla con otros datos de gasto si es necesario.
-  } else {
-    console.error(result.message); // Maneja el error si no se pudo obtener la imagen
+  async onProfileImagePressed() {
+    console.log("Abriendo ActionSheet...");
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Selecciona una opción',
+      buttons: [
+        {
+          text: 'Cámara',
+          icon: 'camera',
+          handler: async () => {
+            console.log("Opción cámara seleccionada");
+            const uploadResult = await this.imageService.getImageFromCamera();
+            this.handleImageUploadResult(uploadResult);
+          }
+        },
+        {
+          text: 'Imágenes',
+          icon: 'image',
+          handler: async () => {
+            console.log("Opción galería seleccionada");
+            const uploadResult = await this.imageService.getImageFromGallery();
+            this.handleImageUploadResult(uploadResult);
+          },
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => { console.log("Opción cancelar seleccionada"); }
+        }
+      ]
+    });
+    await actionSheet.present();
   }
-}
+  
 
+  // Maneja el resultado de la carga de la imagen
+  handleImageUploadResult(result: any) {
+    if (result.success) {
+      this.imageUrl = result.imageUrl;  // Aquí se guarda la URL de la imagen seleccionada
+      console.log('Imagen seleccionada:', this.imageUrl);
+    } else {
+      console.error('Error al seleccionar la imagen:', result.message);
+      // Si lo deseas, puedes mostrar un mensaje de error al usuario con un alert
+    }
+  }
+
+  // Función para añadir el gasto
   async addExpense() {
     if (!this.latitud || !this.longitud) {
       await this.errorAlertCase.showErrorAlert('Debes obtener la geolocalización antes de enviar el formulario.', 'Error');
@@ -60,20 +94,20 @@ export class GastosPage implements OnInit {
     // Combina latitud y longitud en una cadena con el formato "latitud,longitud"
     const geolocationString = `${this.latitud}, ${this.longitud}`;
 
-  // Aquí agregamos la propiedad imageUrl al objeto expenseData
-  const expenseData = {
-    Monto_Gastado: this.Monto_Gastado,
-    categoria: this.categoria,
-    fecha: this.fecha,
-    comentario: this.comentario,
-    Comentario_ubicacion: this.Comentario_ubicacion || this.geolocalizacion, // Usa ubicación si está disponible
-    geolocation: geolocationString, // Guarda la geolocalización como cadena
-    imageUrl: this.imageUrl, // Agrega la URL de la imagen
-  };
+    // Aquí agregamos la propiedad imageUrl al objeto expenseData
+    const expenseData = {
+      Monto_Gastado: this.Monto_Gastado,
+      categoria: this.categoria,
+      fecha: this.fecha,
+      comentario: this.comentario,
+      Comentario_ubicacion: this.Comentario_ubicacion || this.geolocalizacion, // Usa ubicación si está disponible
+      geolocation: geolocationString, // Guarda la geolocalización como cadena
+      imageUrl: this.imageUrl, // Agrega la URL de la imagen
+    };
 
     try {
       await this.expenseManagementCase.addExpense(expenseData);
-      await this.errorAlertCase.showErrorAlert('Gasto añadido con éxito', 'Exito');
+      await this.errorAlertCase.showErrorAlert('Gasto añadido con éxito', 'Éxito');
       this.resetForm();
       this.router.navigate(['/home']);
     } catch (error) {
@@ -82,6 +116,7 @@ export class GastosPage implements OnInit {
     }
   }
 
+  // Función para reiniciar el formulario
   resetForm() {
     this.Monto_Gastado = 0;
     this.categoria = '';
@@ -91,9 +126,10 @@ export class GastosPage implements OnInit {
     this.geolocalizacion = '';
     this.latitud = null;
     this.longitud = null;
-    this.imageUrl ='';
+    this.imageUrl = ''; // Asegúrate de reiniciar la imagen también
   }
 
+  // Método para obtener la geolocalización
   async getGeolocation() {
     try {
       this.isLoading = true;
@@ -112,17 +148,17 @@ export class GastosPage implements OnInit {
       this.isLoading = false;
     }
   }
-  
-  
 
+  // Función para navegar al inicio
   goHome() {
     this.router.navigate(['/home']);
   }
 
+  // Función para validar el formulario antes de enviarlo
   formValid() {
     return (
       this.Monto_Gastado > 0 &&
-      this.categoria.match(/^[A-Za-z]+$/) &&
+      this.categoria.match(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/)&&
       this.fecha &&
       this.isValidDate(this.fecha) &&
       this.Comentario_ubicacion.trim() !== '' && // Validación de la ubicación
@@ -132,8 +168,8 @@ export class GastosPage implements OnInit {
       this.categoria.match(/^[A-Za-z\s]+$/)  // Permite letras y espacios
     );
   }
-  
 
+  // Función para validar la fecha
   isValidDate(date: string): boolean {
     return !isNaN(new Date(date).getTime());
   }

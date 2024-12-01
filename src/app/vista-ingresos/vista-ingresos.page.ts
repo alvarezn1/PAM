@@ -79,6 +79,16 @@ export class VistaIngresosPage implements OnInit {
           console.log(`Ingreso con ID ${id} eliminado.`);
           this.ingresos = this.ingresos.filter((ingreso) => ingreso.id !== id);
 
+          // Eliminar campos de geolocalización (si existen)
+          this.db
+            .object(`usuarios/${this.userId}/ingresos/${id}`)
+            .update({
+              latitud: null,
+              longitud: null,
+              Comentario_ubicacion: null, // Puedes eliminar o vaciar la descripción de la ubicación
+            })
+            .catch((error) => console.error('Error al eliminar geolocalización:', error));
+
           // Actualizar el montoInicial del usuario de forma eficiente
           this.db
             .object(`usuarios/${this.userId}/montoInicial`)

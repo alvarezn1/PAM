@@ -39,7 +39,10 @@
               </a>
             </p>
           </div>
-
+          <!-- Mostrar la imagen si está disponible -->
+          <div *ngIf="ingreso.imageUrl" class="gasto-image">
+            <img [src]="ingreso.imageUrl" alt="Imagen del ingreso" class="gasto-img"/>
+          </div>
             <!-- Botones de eliminar y editar -->
             <div class="button-container">
               <ion-button color="danger" fill="solid" size="small" (click)="eliminarIngreso(ingreso.id)">

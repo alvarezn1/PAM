@@ -82,14 +82,15 @@
 
 
   <!-- Cuadro para la foto -->
-<div class="photo-container">
-  <p><strong>Foto (opcional)</strong></p>
-  <ion-button expand="full" (click)="selectPhoto()">Tomar Foto o Seleccionar desde la Galería</ion-button>
-  <div *ngIf="imageUrl">
-    <p>Imagen seleccionada:</p>
-    <img [src]="imageUrl" alt="Foto del gasto" width="100" height="100" />
+  <div class="photo-container">
+    <p><strong>Foto (opcional)</strong></p>
+    <ion-button expand="full" (click)="onProfileImagePressed()">Tomar Foto o Seleccionar desde la Galería</ion-button>
+    <div *ngIf="imageUrl" class="image-preview">
+      <p>Imagen seleccionada:</p>
+      <img [src]="imageUrl" alt="Foto del gasto" class="selected-image" />
+    </div>
   </div>
-</div>
+
 
   <!-- Botón para añadir -->
   <div class="button-container">

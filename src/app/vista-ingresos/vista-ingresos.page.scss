@@ -47,4 +47,15 @@
     margin-bottom: 8px;
     font-size: 48px; /* Tamaño más grande para mayor impacto */
   }
+  .gasto-image {
+    max-width: 100px;
+    max-height: 100px;
+    overflow: hidden;
+  }
+  
+  .gasto-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
   

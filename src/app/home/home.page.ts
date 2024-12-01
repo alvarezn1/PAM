@@ -13,6 +13,7 @@ import { ExpenseManagementCase } from '../use-cases/expense-management.use-case'
 import { ExternalDataCase } from '../use-cases/external-data.use-case';
 import { ErrorAlertCase } from '../use-cases/error-alert.use-case';
 import { ChangeDetectorRef } from '@angular/core';
+import { RefresherEventDetail, IonRefresher } from '@ionic/angular'; // Asegúrate de importar IonRefresher
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -27,6 +28,8 @@ export class HomePage implements OnInit {
   montoGastado: number = 0;
   userId: string = ''; // UID del usuario actual
   montoInicial: number = 0;
+
+  private refreshInterval: any;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -48,8 +51,44 @@ export class HomePage implements OnInit {
     this.loadExchangeRates();
     this.loadData();
     this.loadInitialAmount();
-    this.listenToInitialAmount();
+    // Inicia el refresco automático cada 5 segundos
+    this.refreshInterval = setInterval(() => {
+      this.doRefresh(); // Llamamos al método doRefresh sin evento aquí
+    }, 1000); // 5000ms = 5 segundos
   }
+  ngOnDestroy() {
+    // Detiene el intervalo cuando el componente se destruye
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+
+  
+  // Método para realizar el refresco cuando el usuario desliza hacia abajo
+  doRefresh(event?: CustomEvent<RefresherEventDetail>) {
+    console.log('Inicio de refresco...');
+
+    // Recarga los datos necesarios
+    this.loadExchangeRates(); // Recargar las tasas de cambio
+    this.loadData(); // Recargar otros datos si es necesario
+    this.loadInitialAmount(); // Recargar el monto inicial
+
+    // Si el evento está presente, completamos el refresco
+    if (event) {
+      setTimeout(() => {
+        const refresher = event.target as unknown; // Convertimos a 'unknown' primero
+        if (refresher && (refresher as IonRefresher).complete) {
+          (refresher as IonRefresher).complete(); // Ahora podemos llamar a complete() de manera segura
+          console.log('Refresco completado.');
+        } else {
+          console.error('El target no es un IonRefresher.');
+        }
+      }, 1000); // Simulamos un pequeño retraso
+    } else {
+      console.log('Refresco automático completado.');
+    }
+  }
+
 
   // Carga las tasas de cambio
   loadExchangeRates() {

@@ -18,6 +18,12 @@
 </ion-header>
 
 <ion-content class="background-image ion-padding" fullscreen>
+  <!-- IonRefresher para activar el gesto de deslizar hacia abajo -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-down" refreshingSpinner="crescent">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <!-- Título de Total y cuadro con signo de peso -->
   <div id="total-container" class="total-container">
     <h2 class="total-title">Total:</h2>
@@ -28,7 +34,6 @@
   <div class="reset-button-container">
     <ion-button (click)="resetInitialAmount()">Reiniciar Monto</ion-button>
   </div>
-
   <!-- Contenedor principal para los gastos -->
   <div class="expenses-wrapper">
     <div id="expenses-container">
