@@ -54,7 +54,7 @@ export class HomePage implements OnInit {
     // Inicia el refresco automático cada 5 segundos
     this.refreshInterval = setInterval(() => {
       this.doRefresh(); // Llamamos al método doRefresh sin evento aquí
-    }, 1000); // 5000ms = 5 segundos
+    }, 1000); // 1000ms = 5 segundos
   }
   ngOnDestroy() {
     // Detiene el intervalo cuando el componente se destruye

@@ -41,40 +41,50 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
     // Lógica al inicializar el componente
   }
   
-  async onProfileImagePressed() {
-    console.log("Abriendo ActionSheet...");
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Selecciona una opción',
-      buttons: [
-        {
-          text: 'Cámara',
-          icon: 'camera',
-          handler: async () => {
-            console.log("Opción cámara seleccionada");
-            const uploadResult = await this.imageService.getImageFromCamera();
-            this.handleImageUploadResult(uploadResult);
-          }
-        },
-        {
-          text: 'Galeria',
-          icon: 'image',
-          handler: async () => {
-            console.log("Opción galería seleccionada");
-            const uploadResult = await this.imageService.getImageFromGallery();
-            this.handleImageUploadResult(uploadResult);
-          },
-        },
-        {
-          text: 'Cancelar',
-          icon: 'close',
-          role: 'cancel',
-          handler: () => { console.log("Opción cancelar seleccionada"); }
-        }
-      ]
-    });
-    await actionSheet.present();
-  }
+// Método que se ejecuta cuando el usuario presiona sobre la imagen de perfil.
+async onProfileImagePressed() {
+  console.log("Abriendo ActionSheet..."); // Muestra un mensaje en la consola indicando que se abrirá el ActionSheet.
   
+  // Creamos el ActionSheet con las opciones disponibles.
+  const actionSheet = await this.actionSheetController.create({
+    header: 'Selecciona una opción', // Título del ActionSheet.
+    
+    // Botones que aparecerán en el ActionSheet.
+    buttons: [
+      {
+        text: 'Cámara', // Texto que aparecerá en el botón de la cámara.
+        icon: 'camera', // Icono que se mostrará en el botón.
+        handler: async () => {
+          console.log("Opción cámara seleccionada"); // Muestra un mensaje en la consola cuando se selecciona la opción cámara.
+          // Llama al servicio para obtener una imagen desde la cámara y maneja el resultado.
+          const uploadResult = await this.imageService.getImageFromCamera();
+          this.handleImageUploadResult(uploadResult); // Llama al método para manejar el resultado de la carga de imagen.
+        }
+      },
+      {
+        text: 'Galeria', // Texto que aparecerá en el botón de galería.
+        icon: 'image', // Icono que se mostrará en el botón.
+        handler: async () => {
+          console.log("Opción galería seleccionada"); // Muestra un mensaje en la consola cuando se selecciona la opción galería.
+          // Llama al servicio para obtener una imagen desde la galería y maneja el resultado.
+          const uploadResult = await this.imageService.getImageFromGallery();
+          this.handleImageUploadResult(uploadResult); // Llama al método para manejar el resultado de la carga de imagen.
+        },
+      },
+      {
+        text: 'Cancelar', // Texto que aparecerá en el botón de cancelar.
+        icon: 'close', // Icono de cierre para el botón cancelar.
+        role: 'cancel', // Establece el rol de este botón como "cancelar", lo que lo hace especial para cerrar el ActionSheet.
+        handler: () => { 
+          console.log("Opción cancelar seleccionada"); // Muestra un mensaje en la consola cuando se selecciona la opción cancelar.
+        }
+      }
+    ]
+  });
+
+  await actionSheet.present(); // Presenta el ActionSheet en la interfaz de usuario.
+}
+
 
   // Maneja el resultado de la carga de la imagen
   handleImageUploadResult(result: any) {
@@ -86,21 +96,7 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
       // Si lo deseas, puedes mostrar un mensaje de error al usuario con un alert
     }
   }
-   // Método para seleccionar foto
- async selectPhoto() {
-  const result = await this.imageService.getImageFromCamera(); // Llama a tu servicio para obtener la imagen
-  if (result.success) {
-    this.imageUrl = result.imageUrl;  // URL de la imagen seleccionada
-    
-    // Si deseas hacer algo con la imagen, como convertirla a Base64, ya lo has hecho en el servicio.
-    console.log('Imagen seleccionada:', this.imageUrl);
 
-    // Asegúrate de que la imagen se sube correctamente al servidor o se guarda donde corresponda.
-    // La imagen está almacenada en imageUrl, puedes guardarla con otros datos de gasto si es necesario.
-  } else {
-    console.error(result.message); // Maneja el error si no se pudo obtener la imagen
-  }
-}
   async addIncome() {
     if (!this.latitud || !this.longitud) {
       await this.errorAlertCase.showErrorAlert('Debes obtener la geolocalización antes de enviar el formulario.', 'Error');
@@ -149,7 +145,7 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
   }
 
   resetForm() {
-    this.Monto_Ingresado = 0; // Cambié Monto_Gastado a Monto_Ingresado
+    this.Monto_Ingresado = 0; 
     this.categoria = '';
     this.fecha = '';
     this.comentario = '';
@@ -159,24 +155,35 @@ export class IngresosPage implements OnInit { // Cambié el nombre de la clase a
     this.imageUrl ='';
   }
 
-  async getGeolocation() {
-    try {
-      this.isLoading = true;
-      const { latitude, longitude } = await this.geolocationService.getCurrentLocation();
-      this.geolocalizacion = `Lat: ${latitude}, Lon: ${longitude}`; // Aquí puedes modificar la forma en que se muestra la geolocalización
-  
-      // Asigna la latitud y longitud a las variables
-      this.latitud = latitude;
-      this.longitud = longitude;
-  
-    } catch (error) {
-      console.error(error);
-      this.geolocalizacion = 'No se pudo obtener la ubicación.';
-      this.Comentario_ubicacion = 'No disponible'; // Valor por defecto si falla la geolocalización
-    } finally {
-      this.isLoading = false;
-    }
+// Método asincrónico para obtener la geolocalización del dispositivo.
+async getGeolocation() {
+  try {
+    this.isLoading = true; // Indicamos que la carga está en proceso.
+    
+    // Llamamos al servicio de geolocalización para obtener la latitud y longitud actuales.
+    const { latitude, longitude } = await this.geolocationService.getCurrentLocation();
+    
+    // Asignamos la geolocalización en formato de texto a la variable 'geolocalizacion'.
+    this.geolocalizacion = `Lat: ${latitude}, Lon: ${longitude}`; // Aquí puedes modificar la forma en que se muestra la geolocalización
+    
+    // Asignamos las coordenadas a las variables latitud y longitud.
+    this.latitud = latitude;
+    this.longitud = longitude;
+
+  } catch (error) {
+    console.error(error); // Muestra un error en la consola si algo sale mal al obtener la geolocalización.
+    
+    // Mensaje en caso de error al obtener la ubicación.
+    this.geolocalizacion = 'No se pudo obtener la ubicación.';
+    
+    // Establece un valor por defecto para el comentario de la ubicación si falla la geolocalización.
+    this.Comentario_ubicacion = 'No disponible'; 
+  } finally {
+    // Indicamos que el proceso de carga ha terminado.
+    this.isLoading = false;
   }
+}
+
   
 
   goHome() {
