@@ -67,12 +67,12 @@ export class HomePage implements OnInit {
   // Método para realizar el refresco cuando el usuario desliza hacia abajo
   doRefresh(event?: CustomEvent<RefresherEventDetail>) {
     console.log('Inicio de refresco...');
-
-    // Recarga los datos necesarios
-    this.loadExchangeRates(); // Recargar las tasas de cambio
-    this.loadData(); // Recargar otros datos si es necesario
+  
+    // Recarga solo los datos necesarios, excluyendo la API de tasas de cambio
+    // this.loadExchangeRates(); // Comentado para no refrescar la API
+    this.loadData(); // Recargar datos del usuario
     this.loadInitialAmount(); // Recargar el monto inicial
-
+  
     // Si el evento está presente, completamos el refresco
     if (event) {
       setTimeout(() => {
@@ -88,6 +88,7 @@ export class HomePage implements OnInit {
       console.log('Refresco automático completado.');
     }
   }
+  
 
 
   // Carga las tasas de cambio
